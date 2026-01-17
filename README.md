@@ -72,11 +72,9 @@ git push -u origin kim
 ```bash
 # choi의 기능 브랜치
 git checkout choi
-git checkout -b choi/feature-lexer
 
 # kim의 기능 브랜치
 git checkout kim
-git checkout -b kim/feature-parser
 ```
 
 ## 실행 방법
