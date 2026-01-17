@@ -102,7 +102,3 @@ mvn exec:java -Dexec.mainClass="com.chat.ChatServer"
 - ⏳ 인증 시스템 (JWT)
 - ⏳ Nexon API 연동
 - ⏳ 데이터베이스 연동
-
-## 라이선스
-
-MIT
