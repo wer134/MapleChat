@@ -18,21 +18,10 @@ function App() {
     setCharacterInfo(null);
 
   try {
-    //1.  캐릭터 이름으로 OCID 조회
-    const ocidResponse = await fetch(`/character/id?name=${encodeURIComponent(characterName)}`);
-    if (!ocidResponse.ok) {
+    // 캐릭터 이름으로 바로 기본 정보 조회
+    const basicResponse = await fetch(`/character/basic?name=${encodeURIComponent(characterName)}`);
+    if (!basicResponse.ok) {
       throw new Error('Character not found');
-    }
-    const ocidData = await ocidResponse.json();
-    
-    if (!ocidData.characterOcid) {
-      throw new Error('Character not found');
-    }
-
-    // 2. OCID로 기본 정보 조회
-    const basicResponse = await fetch(`/character/basic?ocid=${ocidData.characterOcid}`);
-    if( !basicResponse.ok) {
-      throw new Error('Failed to fetch basic information');
     }
     const basicData = await basicResponse.json();
 
