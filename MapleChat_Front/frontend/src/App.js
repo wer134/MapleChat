@@ -67,12 +67,12 @@ const handleKeyPress = (e) => {
               </div>
               <div className="character-details">
                 <div className="character-name">
-                    {characterInfo.characterName}
+                    {characterInfo.character_name}
                 </div>
                 <div className="character-basic">
-                  <span>{characterInfo.worldName}</span>
-                  <span>LV.{characterInfo.characterLevel}</span>
-                  <span>{characterInfo.characterClass}</span>
+                  <span>{characterInfo.world_name}</span>
+                  <span>LV.{characterInfo.character_level}</span>
+                  <span>{characterInfo.character_class}</span>
                 </div>
               </div>
             </div>
