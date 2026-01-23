@@ -1,0 +1,6 @@
+com\example\MapleChat\dto\CharacterOcid.class
+com\example\MapleChat\service\NexonApiService.class
+com\example\MapleChat\MapleChatApplication.class
+com\example\MapleChat\dto\CharacterBasicInfo.class
+com\example\MapleChat\controller\CharacterController.class
+com\example\MapleChat\dto\CharacterPopularity.class
