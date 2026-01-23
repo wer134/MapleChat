@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class CharacterBasicResponse {
+public class CharacterBasicInfo {
     @JsonProperty("character_name")
     private String characterName;
 

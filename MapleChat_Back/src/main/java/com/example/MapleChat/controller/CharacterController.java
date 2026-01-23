@@ -1,7 +1,8 @@
 package com.example.MapleChat.controller;
 
-import com.example.MapleChat.dto.CharacterBasicResponse;
+import com.example.MapleChat.dto.CharacterBasicInfo;
 import com.example.MapleChat.dto.CharacterOcid;
+import com.example.MapleChat.dto.CharacterPopularity;
 import com.example.MapleChat.service.NexonApiService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,13 +17,18 @@ public class CharacterController {
         this.nexonApiService = nexonApiService;
     }
 
-    @GetMapping("/character/id")
     public CharacterOcid getid(@RequestParam String name) {
-        return nexonApiService.getid(name);
+        return nexonApiService.getId(name);
     }
     
     @GetMapping("/character/basic")
-    public CharacterBasicResponse getBasic(@RequestParam String ocid) {
-        return nexonApiService.getBasic(ocid);
+    public CharacterBasicInfo getBasic(@RequestParam String name) {
+        return nexonApiService.getBasicByName(name);
     }
+
+    @GetMapping("/character/popularity")
+    public CharacterPopularity getPopularity(@RequestParam String name) {
+        return nexonApiService.getPopularityByName(name);
+    }
+    
 }
