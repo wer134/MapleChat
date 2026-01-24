@@ -47,4 +47,47 @@ public class NexonApiService {
     public CharacterPopularity getPopularityByName(String name) {
         return getPopularity(getId(name).getCharacterOcid());
     }
+
+    public String getCharacterImage( String name, String action, Integer actionFrame, String emotion, Integer emotionFrame, String wmotion) {
+        CharacterBasicInfo info = getBasicByName(name);
+        String baseUrl = info.getCharacterImage();
+
+        return buildCharacterImg(baseUrl, action, actionFrame, emotion, emotionFrame, wmotion);
+    }
+
+    public String buildCharacterImg(
+            String base,
+            String action,
+            Integer actionFrame,
+            String emotion,
+            Integer emotionFrame,
+            String wmotion
+    ) {
+        StringBuilder sb = new StringBuilder(base);
+        sb.append("?");
+
+        if (action != null) {
+            sb.append("action=").append(action);
+            if (actionFrame != null) sb.append(".").append(actionFrame);
+            sb.append("&");
+        }
+
+        if (emotion != null) {
+            sb.append("emotion=").append(emotion);
+            if (emotionFrame != null) sb.append(".").append(emotionFrame);
+            sb.append("&");
+        }
+
+        if (wmotion != null) {
+            sb.append("wmotion=").append(wmotion);
+            sb.append("&");
+        }
+
+        String url = sb.toString();
+        if (url.endsWith("&") || url.endsWith("?")) {
+            url = url.substring(0, url.length() - 1);
+        }
+
+        return url;
+    }
 }

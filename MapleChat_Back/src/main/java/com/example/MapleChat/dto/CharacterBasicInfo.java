@@ -16,4 +16,7 @@ public class CharacterBasicInfo {
 
     @JsonProperty("character_level")
     private int characterLevel;
+
+    @JsonProperty("character_image")
+    private String characterImage;
 }

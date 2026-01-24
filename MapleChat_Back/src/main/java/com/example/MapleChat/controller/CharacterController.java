@@ -30,5 +30,25 @@ public class CharacterController {
     public CharacterPopularity getPopularity(@RequestParam String name) {
         return nexonApiService.getPopularityByName(name);
     }
-    
+
+    @GetMapping("/character/image")
+    public String getCharacterImage(
+            @RequestParam String name,
+            @RequestParam(required = false) String action,
+            @RequestParam(required = false) Integer actionFrame,
+            @RequestParam(required = false) String emotion,
+            @RequestParam(required = false) Integer emotionFrame,
+            @RequestParam(required = false) String wmotion
+    ) {
+        CharacterBasicInfo info = nexonApiService.getBasicByName(name);
+        return nexonApiService.buildCharacterImg(
+                info.getCharacterImage(),
+                action,
+                actionFrame,
+                emotion,
+                emotionFrame,
+                wmotion
+        );
+    }
+
 }
