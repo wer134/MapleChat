@@ -108,7 +108,7 @@ const handleKeyPress = (e) => {
                     {characterInfo.character_name}
                 </div>
                 <div className="character-basic">
-                  <span>{characterInfo.world_name}
+                  <span className="world-name">
                     {getWorldIcon(characterInfo.world_name)&&(
                       <img
                       src={getWorldIcon(characterInfo.world_name)}
@@ -116,6 +116,7 @@ const handleKeyPress = (e) => {
                       className="world-icon"
                       />
                     )}
+                    {characterInfo.world_name}
                   </span>
                   <span>LV.{characterInfo.character_level}</span>
                   <span>{characterInfo.character_class}</span>
