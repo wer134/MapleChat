@@ -99,7 +99,18 @@ const handleKeyPress = (e) => {
           {characterInfo && (
             <div className="character-info">
               <div className="character-image">
-                <div className="image-placeholder">
+                {characterInfo.character_image ? (
+                  <img 
+                    src={characterInfo.character_image} 
+                    alt={characterInfo.character_name}
+                    className="character-avatar"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'block';
+                    }}
+                  />
+                ) : null}
+                <div className="image-placeholder" style={{display: characterInfo.character_image ? 'none' : 'block'}}>
                   캐릭터 이미지
                 </div>
               </div>
