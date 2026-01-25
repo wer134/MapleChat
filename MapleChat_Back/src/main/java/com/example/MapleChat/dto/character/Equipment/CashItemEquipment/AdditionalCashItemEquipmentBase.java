@@ -1,4 +1,4 @@
-package com.example.MapleChat.dto.character.cashItemEquipment;
+package com.example.MapleChat.dto.character.Equipment.CashItemEquipment;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class CashItemEquipmentBase {
+public class AdditionalCashItemEquipmentBase {
     @JsonProperty("cash_item_equipment_slot")    
     private String cashItemEquipmentSlot;
 
