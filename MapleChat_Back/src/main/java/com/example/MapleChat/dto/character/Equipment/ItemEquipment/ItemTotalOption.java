@@ -1,4 +1,4 @@
-package com.example.MapleChat.dto.character.itemEquipment;
+package com.example.MapleChat.dto.character.Equipment.ItemEquipment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

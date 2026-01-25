@@ -1,16 +1,16 @@
-package com.example.MapleChat.dto.character.itemEquipment;
+package com.example.MapleChat.dto.character.Equipment.ItemEquipment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class ItemEquipmentPreset {
-    @JsonProperty("equipment_slot")
-    private String equipmentSlot;
+public class DragonEquipment {
+    @JsonProperty("item_equipment_slot")
+    private String itemEquipmentSlot;
 
     @JsonProperty("item_name")
     private String itemName;
-
+    
     @JsonProperty("item_icon")
     private String itemIcon;
 
@@ -28,30 +28,6 @@ public class ItemEquipmentPreset {
 
     @JsonProperty("item_base_option")
     private ItemBaseOption itemBaseOption;
-
-    @JsonProperty("potential_option_grade")
-    private String potentialOptionGrade;
-
-    @JsonProperty("additional_potential_option_grade")
-    private String additionalPotentialOptionGrade;
-
-    @JsonProperty("potential_option_1")
-    private String potentialOption1;
-
-    @JsonProperty("potential_option_2")
-    private String potentialOption2;
-
-    @JsonProperty("potential_option_3")
-    private String potentialOption3;
-
-    @JsonProperty("additional_potential_option_1")
-    private String additionalPotentialOption1;
-
-    @JsonProperty("additional_potential_option_2")
-    private String additionalPotentialOption2;
-
-    @JsonProperty("additional_potential_option_3")
-    private String additionalPotentialOption3;
 
     @JsonProperty("equipment_level_increase")
     private Long equipmentLevelIncrease;
@@ -96,8 +72,8 @@ public class ItemEquipmentPreset {
     private String starForce;
 
     @JsonProperty("starforce_scroll_flag")
-    private String starforceScrollFlag;
-
+    private String starforceScrollFlag;    
+    
     @JsonProperty("item_starforce_option")
     private ItemStarforceOption itemStarforceOption;
 
@@ -110,4 +86,3 @@ public class ItemEquipmentPreset {
     @JsonProperty("freestyle_flag")
     private String freestyleFlag;
 }
-

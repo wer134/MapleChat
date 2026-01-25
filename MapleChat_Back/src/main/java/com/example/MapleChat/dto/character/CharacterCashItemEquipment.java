@@ -2,10 +2,10 @@ package com.example.MapleChat.dto.character;
 
 import java.util.List;
 
-import com.example.MapleChat.dto.character.cashItemEquipment.AdditionalCashItemEquipmentBase;
-import com.example.MapleChat.dto.character.cashItemEquipment.AdditionalCashItemEquipmentPreset;
-import com.example.MapleChat.dto.character.cashItemEquipment.CashItemEquipmentBase;
-import com.example.MapleChat.dto.character.cashItemEquipment.CashItemEquipmentPreset;
+import com.example.MapleChat.dto.character.Equipment.CashItemEquipment.AdditionalCashItemEquipmentBase;
+import com.example.MapleChat.dto.character.Equipment.CashItemEquipment.AdditionalCashItemEquipmentPreset;
+import com.example.MapleChat.dto.character.Equipment.CashItemEquipment.CashItemEquipmentBase;
+import com.example.MapleChat.dto.character.Equipment.CashItemEquipment.CashItemEquipmentPreset;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 

@@ -1,10 +1,10 @@
-package com.example.MapleChat.dto.character.itemEquipment;
+package com.example.MapleChat.dto.character.Equipment.ItemEquipment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class ItemStarforceOption {
+public class ItemEtcOption {
     @JsonProperty("str")
     private String str;
 
