@@ -3,6 +3,7 @@ package com.example.MapleChat.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+// 기본 정보
 @Data
 public class CharacterBasicInfo {
     @JsonProperty("character_name")
