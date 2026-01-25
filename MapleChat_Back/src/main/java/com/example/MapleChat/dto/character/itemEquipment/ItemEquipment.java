@@ -1,16 +1,16 @@
-package com.example.MapleChat.dto.itemEquipment;
+package com.example.MapleChat.dto.character.itemEquipment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class ItemEquipmentPreset {
-    @JsonProperty("equipment_slot")
-    private String equipmentSlot;
+public class ItemEquipment {
+    @JsonProperty("item_equipment_slot")
+    private String itemEquipmentSlot;
 
     @JsonProperty("item_name")
     private String itemName;
-
+    
     @JsonProperty("item_icon")
     private String itemIcon;
 
@@ -28,6 +28,12 @@ public class ItemEquipmentPreset {
 
     @JsonProperty("item_base_option")
     private ItemBaseOption itemBaseOption;
+
+    @JsonProperty("potential_option_flag")
+    private String potentialOptionFlag;
+
+    @JsonProperty("additional_potential_option_flag")
+    private String additionalPotentialOptionFlag;
 
     @JsonProperty("potential_option_grade")
     private String potentialOptionGrade;
@@ -110,4 +116,3 @@ public class ItemEquipmentPreset {
     @JsonProperty("freestyle_flag")
     private String freestyleFlag;
 }
-
