@@ -1,17 +1,18 @@
 package com.example.MapleChat.service;
 
-import com.example.MapleChat.dto.CharacterAbility;
-import com.example.MapleChat.dto.CharacterBasicInfo;
-import com.example.MapleChat.dto.CharacterHyperStat;
-import com.example.MapleChat.dto.CharacterItemEquipment;
-import com.example.MapleChat.dto.CharacterOcid;
-import com.example.MapleChat.dto.CharacterPopularity;
-import com.example.MapleChat.dto.CharacterPropensity;
-import com.example.MapleChat.dto.CharacterStat;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import com.example.MapleChat.dto.character.CharacterAbility;
+import com.example.MapleChat.dto.character.CharacterBasicInfo;
+import com.example.MapleChat.dto.character.CharacterCashItemEquipment;
+import com.example.MapleChat.dto.character.CharacterHyperStat;
+import com.example.MapleChat.dto.character.CharacterItemEquipment;
+import com.example.MapleChat.dto.character.CharacterOcid;
+import com.example.MapleChat.dto.character.CharacterPopularity;
+import com.example.MapleChat.dto.character.CharacterPropensity;
+import com.example.MapleChat.dto.character.CharacterStat;
 
 @Service
 public class NexonApiService {
@@ -147,5 +148,17 @@ public class NexonApiService {
     }
     public CharacterItemEquipment getEquipmentByName(String name) {
         return getEquipment(getId(name).getCharacterOcid());
+    }
+
+    public CharacterCashItemEquipment getCashEquipment(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/cashitem-equipment")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterCashItemEquipment.class).block();
+
+    }
+    public CharacterCashItemEquipment getCashEquipmentByName(String name) {
+        return getCashEquipment(getId(name).getCharacterOcid());
     }
 }
