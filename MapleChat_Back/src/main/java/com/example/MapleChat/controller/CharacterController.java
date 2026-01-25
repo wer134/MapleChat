@@ -1,8 +1,13 @@
 package com.example.MapleChat.controller;
 
+import com.example.MapleChat.dto.CharacterAbility;
 import com.example.MapleChat.dto.CharacterBasicInfo;
+import com.example.MapleChat.dto.CharacterHyperStat;
 import com.example.MapleChat.dto.CharacterOcid;
 import com.example.MapleChat.dto.CharacterPopularity;
+import com.example.MapleChat.dto.CharacterPropensity;
+import com.example.MapleChat.dto.CharacterStat;
+import com.example.MapleChat.dto.CharacterItemEquipment;
 import com.example.MapleChat.service.NexonApiService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,4 +56,28 @@ public class CharacterController {
         );
     }
 
+    @GetMapping("/character/ability")
+    public CharacterAbility getAbility(@RequestParam String name) {
+        return nexonApiService.getAbilityByName(name);
+    }
+    
+    @GetMapping("/character/propensity")
+    public CharacterPropensity getPropensity(@RequestParam String name) {
+        return nexonApiService.getPropensityByName(name);
+    }
+
+    @GetMapping("/character/stat")
+    public CharacterStat getStat(@RequestParam String name) {
+        return nexonApiService.getStatByName(name);
+    }
+
+    @GetMapping("/character/hyper-stat")
+    public CharacterHyperStat getHyperStat(@RequestParam String name) {
+        return nexonApiService.getHyperStatByName(name);
+    }
+
+    @GetMapping("/character/equipment")
+    public CharacterItemEquipment getEquipment(@RequestParam String name) {
+        return nexonApiService.getEquipmentByName(name);
+    }
 }

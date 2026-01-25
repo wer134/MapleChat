@@ -1,8 +1,13 @@
 package com.example.MapleChat.service;
 
+import com.example.MapleChat.dto.CharacterAbility;
 import com.example.MapleChat.dto.CharacterBasicInfo;
+import com.example.MapleChat.dto.CharacterHyperStat;
+import com.example.MapleChat.dto.CharacterItemEquipment;
 import com.example.MapleChat.dto.CharacterOcid;
 import com.example.MapleChat.dto.CharacterPopularity;
+import com.example.MapleChat.dto.CharacterPropensity;
+import com.example.MapleChat.dto.CharacterStat;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,7 +36,6 @@ public class NexonApiService {
                 .queryParam("ocid", ocid)
                 .build()).retrieve().bodyToMono(CharacterBasicInfo.class).block();
     }
-
     public CharacterBasicInfo getBasicByName(String name) {
         return getBasic(getId(name).getCharacterOcid());
     }
@@ -43,7 +47,6 @@ public class NexonApiService {
                 .queryParam("ocid", ocid)
                 .build()).retrieve().bodyToMono(CharacterPopularity.class).block();
     }
-
     public CharacterPopularity getPopularityByName(String name) {
         return getPopularity(getId(name).getCharacterOcid());
     }
@@ -54,7 +57,6 @@ public class NexonApiService {
 
         return buildCharacterImg(baseUrl, action, actionFrame, emotion, emotionFrame, wmotion);
     }
-
     public String buildCharacterImg(
             String base,
             String action,
@@ -89,5 +91,61 @@ public class NexonApiService {
         }
 
         return url;
+    }
+
+    public CharacterAbility getAbility(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/ability")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterAbility.class).block();
+    }
+    public CharacterAbility getAbilityByName(String name) {
+        return getAbility(getId(name).getCharacterOcid());
+    }
+
+    public CharacterPropensity getPropensity(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/propensity")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterPropensity.class).block();
+    }
+    public CharacterPropensity getPropensityByName(String name) {
+        return getPropensity(getId(name).getCharacterOcid());
+    }
+
+    public CharacterStat getStat(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/stat")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterStat.class).block();
+    }
+    public CharacterStat getStatByName(String name) {
+        return getStat(getId(name).getCharacterOcid());
+    }
+
+    public CharacterHyperStat getHyperStat(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/hyper-stat")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterHyperStat.class).block();
+    }
+    public CharacterHyperStat getHyperStatByName(String name) {
+        return getHyperStat(getId(name).getCharacterOcid());
+    }
+
+    public CharacterItemEquipment getEquipment(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/item-equipment")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterItemEquipment.class).block();
+
+    }
+    public CharacterItemEquipment getEquipmentByName(String name) {
+        return getEquipment(getId(name).getCharacterOcid());
     }
 }

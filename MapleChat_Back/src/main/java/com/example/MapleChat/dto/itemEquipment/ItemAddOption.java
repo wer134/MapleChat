@@ -1,0 +1,52 @@
+package com.example.MapleChat.dto.itemEquipment;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+
+@Data
+public class ItemAddOption {
+    @JsonProperty("str")
+    private String str;
+
+    @JsonProperty("dex")
+    private String dex;
+
+    @JsonProperty("luk")
+    private String luk;
+
+    @JsonProperty("int")
+    private String optionInt;
+
+    @JsonProperty("max_hp")
+    private String maxHp;
+
+    @JsonProperty("max_mp")
+    private String maxMp;
+
+    @JsonProperty("attack_power")
+    private String attackPower;
+
+    @JsonProperty("magic_power")
+    private String magicPower;
+
+    @JsonProperty("armor")
+    private String armor;
+
+    @JsonProperty("speed")
+    private String speed;
+
+    @JsonProperty("jump")
+    private String jump;
+
+    @JsonProperty("boss_damage")
+    private String bossDamage;
+
+    @JsonProperty("damage")
+    private String damage;
+
+    @JsonProperty("all_stat")
+    private String allStat;
+
+    @JsonProperty("equipment_level_decrease")
+    private Long equipmentLevelDecrease;
+}
