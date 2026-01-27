@@ -1,0 +1,37 @@
+export const slotGrid = [
+  { label: 'Ring I', slot: '반지1' },
+  { label: '', slot: '' },
+  { label: 'Hat', slot: '모자' },
+  { label: '', slot: '' },
+  { label: 'Emblem', slot: '엠블렘' },
+
+  { label: 'Ring II', slot: '반지2' },
+  { label: 'Pendant', slot: '펜던트' },
+  { label: 'Face', slot: '얼굴장식' },
+  { label: '', slot: '' },
+  { label: 'Badge', slot: '뱃지' },
+
+  { label: 'Ring III', slot: '반지3' },
+  { label: 'Pendant', slot: '펜던트2' },
+  { label: 'Eye', slot: '눈장식' },
+  { label: 'Ear', slot: '귀고리' },
+  { label: 'Medal', slot: '훈장' },
+
+  { label: 'Ring IV', slot: '반지4' },
+  { label: 'Weapon', slot: '무기' },
+  { label: 'Top', slot: '상의' },
+  { label: 'Shoulder', slot: '어깨장식' },
+  { label: 'Sub', slot: '보조무기' },
+
+  { label: 'Pocket', slot: '포켓 아이템' },
+  { label: 'Belt', slot: '벨트' },
+  { label: 'Bottom', slot: '하의' },
+  { label: 'Glove', slot: '장갑' },
+  { label: 'Cape', slot: '망토' },
+
+  { label: '', slot: '' },
+  { label: 'Heart', slot: '기계심장' },
+  { label: 'Shoe', slot: '신발' },
+  { label: 'Android', slot: '안드로이드' },
+  { label: '', slot: '' },
+];
