@@ -254,7 +254,7 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
       {renderStarforce()}
       {/* 아이템 이름 */}
       <div className="item-name">
-        {equipment.item_name} {equipment.scroll_upgrade && parseInt(equipment.scroll_upgrade) > 0 && `(+${equipment.scroll_upgrade})`}
+        {equipment.item_name}
       </div>
       {formatExpireDate(equipment.date_expire) && (
         <div className="item-trade-info" style={{ color: '#ff9933' }}>
