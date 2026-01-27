@@ -77,7 +77,6 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
       '제논': '해적',
       '엔젤릭버스터': '해적',
       '아크': '해적',
-      
     };
     return jobMap[jobName] || '전 직업';
   };
@@ -100,6 +99,7 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
       return dateStr;
     }
   };
+
   React.useLayoutEffect(() => {
     if (tooltipRef.current && position) {
       const { innerWidth, innerHeight } = window;
@@ -144,279 +144,299 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
     return 5;
   };
 
-  const maxStarforce = getMaxStarforce();
-  const goldStars = starforce;
-  const greyStars = Math.max(0, maxStarforce - starforce);
+    const maxStarforce = getMaxStarforce();
+    const goldStars = starforce;
+    const greyStars = Math.max(0, maxStarforce - starforce);
 
-  const getRarityColor = (grade) => {
-    const colors = {
-      '레어': '#66FFFF',
-      '에픽': '#9966FF',
-      '유니크': '#FFCC00',
-      '레전드리': '#CCFF00'
+    const getRarityColor = (grade) => {
+      const colors = {
+        '레어': '#66FFFF',
+        '에픽': '#9966FF',
+        '유니크': '#FFCC00',
+        '레전드리': '#CCFF00'
+      };
+      return colors[grade] || '#FFFFFF';
     };
-    return colors[grade] || '#FFFFFF';
-  };
 
-  const getRarityInitial = (grade) => {
-    const initials = {
-      '레어': 'R',
-      '에픽': 'E',
-      '유니크': 'U',
-      '레전드리': 'L'
+    const getRarityInitial = (grade) => {
+      const initials = {
+        '레어': 'R',
+        '에픽': 'E',
+        '유니크': 'U',
+        '레전드리': 'L'
+      };
+      return initials[grade] || '';
     };
-    return initials[grade] || '';
-  };
 
-  const rarityColor = getRarityColor(equipment.potential_option_grade);
-  const additionalRarityColor = getRarityColor(equipment.additional_potential_option_grade);
-  const isLimitedTime = formatExpireDate(equipment.date_expire) !== null;
+    const rarityColor = getRarityColor(equipment.potential_option_grade);
+    const additionalRarityColor = getRarityColor(equipment.additional_potential_option_grade);
+    const isLimitedTime = formatExpireDate(equipment.date_expire) !== null;
 
-  const renderStarforce = () => {
-    const allStars = [];
-    const isAmazing = equipment.amazing_scroll_flag === '사용';
-    for (let i = 0; i < goldStars; i++) {
-      allStars.push(isAmazing ? 'blue' : 'gold');
-    }
-    for (let i = 0; i < greyStars; i++) {
-      allStars.push('grey');
-    }
+    const renderStarforce = () => {
+      const allStars = [];
+      const isAmazing = equipment.amazing_scroll_flag === '사용';
+      for (let i = 0; i < goldStars; i++) {
+        allStars.push(isAmazing ? 'blue' : 'gold');
+      }
+      for (let i = 0; i < greyStars; i++) {
+        allStars.push('grey');
+      }
 
-    // 5개씩 묶기
-    const starGroups = [];
-    for (let i = 0; i < allStars.length; i += 5) {
-      starGroups.push(allStars.slice(i, i + 5));
-    }
+      // 5개씩 묶기
+      const starGroups = [];
+      for (let i = 0; i < allStars.length; i += 5) {
+        starGroups.push(allStars.slice(i, i + 5));
+      }
 
-    // 3묶음씩 한 줄에 배치
-    const rows = [];
-    for (let i = 0; i < starGroups.length; i += 3) {
-      rows.push(starGroups.slice(i, i + 3));
-    }
+      // 3묶음씩 한 줄에 배치
+      const rows = [];
+      for (let i = 0; i < starGroups.length; i += 3) {
+        rows.push(starGroups.slice(i, i + 3));
+      }
 
-    return (
-      <div className="starforce-stars-container">
-        {rows.map((row, rowIndex) => (
-          <div key={`row-${rowIndex}`} className="star-row">
-            {row.map((group, groupIndex) => (
-              <div key={`group-${rowIndex}-${groupIndex}`} className="star-group">
-                {group.map((type, starIndex) => (
-                  <span key={`star-${rowIndex}-${groupIndex}-${starIndex}`} className={`star ${type}`}>★</span>
-                ))}
-              </div>
-            ))}
+      return (
+        <div className="starforce-stars-container">
+          {rows.map((row, rowIndex) => (
+            <div key={`row-${rowIndex}`} className="star-row">
+              {row.map((group, groupIndex) => (
+                <div key={`group-${rowIndex}-${groupIndex}`} className="star-group">
+                  {group.map((type, starIndex) => (
+                    <span key={`star-${rowIndex}-${groupIndex}-${starIndex}`} className={`star ${type}`}>★</span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      );
+    };
+
+    const renderStat = (label, key) => {
+      const total = parseInt(equipment.item_total_option?.[key] || 0);
+      if (total === 0) return null;
+      const base = parseInt(equipment.item_base_option?.[key] || 0);
+      const add = parseInt(equipment.item_add_option?.[key] || 0);
+      const etc = parseInt(equipment.item_etc_option?.[key] || 0);
+      const starforce = parseInt(equipment.item_starforce_option?.[key] || 0);
+      const hasBonus = add > 0 || etc > 0 || starforce > 0;
+
+      if (key === 'all_stat' || key === 'boss_damage' || key === 'ignore_monster_armor' || key === 'max_hp_rate' || key === 'max_mp_rate') {
+        return (
+          <div className="stat-line" key={key}>
+            {label} <span className="stat-value">+{total}%</span>
+            {hasBonus && (
+              <span className="stat-breakdown">
+                ({base}%
+                {starforce > 0 && <span className="stat-starforce"> +{starforce}%</span>}
+                {etc > 0 && <span className="stat-etc"> +{etc}%</span>}
+                {add > 0 && <span className="stat-add"> +{add}%</span>}
+                )
+              </span>
+            )}
           </div>
-        ))}
-      </div>
-    );
-  };
+        );
+      }
 
-  const renderStat = (label, key) => {
-    const total = parseInt(equipment.item_total_option?.[key] || 0);
-    if (total === 0) return null;
-
-    const base = parseInt(equipment.item_base_option?.[key] || 0);
-    const add = parseInt(equipment.item_add_option?.[key] || 0);
-    const etc = parseInt(equipment.item_etc_option?.[key] || 0);
-    const starforce = parseInt(equipment.item_starforce_option?.[key] || 0);
-
-    const hasBonus = add > 0 || etc > 0 || starforce > 0;
+      // 일반 스탯 (콜론 없음)
+      return (
+        <div className="stat-line" key={key}>
+          {label} <span className="stat-value">+{total}</span>
+          {hasBonus && (
+            <span className="stat-breakdown">
+              ({base}
+              {starforce > 0 && <span className="stat-starforce"> +{starforce}</span>}
+              {etc > 0 && <span className="stat-etc"> +{etc}</span>}
+              {add > 0 && <span className="stat-add"> +{add}</span>}
+              )
+            </span>
+          )}
+        </div>
+      );
+    }
 
     return (
-      <div className="stat-line" key={key}>
-        {label}: <span className="stat-value">+{total}</span>
-        {hasBonus && (
-          <span className="stat-breakdown">
-            ({base}
-            {starforce > 0 && <span className="stat-starforce"> +{starforce}</span>}
-            {etc > 0 && <span className="stat-etc"> +{etc}</span>}
-            {add > 0 && <span className="stat-add"> +{add}</span>}
-            )
-          </span>
+      <div 
+        ref={tooltipRef}
+        className={`equipment-tooltip ${isPinned ? 'pinned' : ''}`}
+        style={{
+          left: adjustedPos.x,
+          top: adjustedPos.y
+        }}
+      >
+        {isPinned && (
+          <button onClick={onClose} className="tooltip-close-button">×</button>
+        )}
+        {/* 스타포스 별 표시 */}
+        {renderStarforce()}
+        {/* 아이템 이름 */}
+        <div className="item-name">
+          {equipment.item_name} {equipment.scroll_upgrade && parseInt(equipment.scroll_upgrade) > 0 && `(+${equipment.scroll_upgrade})`}
+        </div>
+        {formatExpireDate(equipment.date_expire) && (
+          <div className="item-trade-info" style={{ color: '#ff9933' }}>
+            유효 기간 : {formatExpireDate(equipment.date_expire)}
+          </div>
+        )}
+
+        <div className="tooltip-divider"></div>
+
+        {/* 아이템 아이콘 및 정보 */}
+        <div className="item-header">
+          {equipment.item_icon && (
+            <img src={equipment.item_icon} alt={equipment.item_name} className="item-icon" />
+          )}
+          <div className="item-info">
+            <div className="item-category">장비 분류</div>
+            <div className="item-job-req">{equipment.item_equipment_part}</div>
+            <div className="item-category">장착 직업</div>
+            <div className="item-job-req">{getJobCategory(characterClass)}</div>
+            <div className="item-category">요구 레벨</div>
+            <div className="item-level-req">
+              {equipment.item_total_option?.equipment_level_decrease > 0 ? (
+                <>
+                  Lv. {equipment.item_base_option?.base_equipment_level - equipment.item_total_option?.equipment_level_decrease} ({equipment.item_base_option?.base_equipment_level} - {equipment.item_total_option?.equipment_level_decrease})
+                </>
+              ) : (
+                <>Lv. {equipment.item_base_option?.base_equipment_level || 0}</>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="tooltip-divider"></div>
+
+
+        {/* 스탯 정보 */}
+        {(equipment.item_total_option || equipment.scroll_upgradeable_count || (parseInt(equipment.scroll_upgrade || 0) > 0 || parseInt(equipment.scroll_resilience_count || 0) > 0)) && (
+          <div className="item-stats">
+            {equipment.item_total_option && (
+              <>
+                {renderStat('STR', 'str')}
+                {renderStat('DEX', 'dex')}
+                {renderStat('INT', 'int')}
+                {renderStat('LUK', 'luk')}
+                {renderStat('올스탯', 'all_stat')}
+                {renderStat('최대 HP', 'max_hp')}
+                {renderStat('최대 MP', 'max_mp')}
+                {renderStat('최대 HP(%)', 'max_hp_rate')}
+                {renderStat('최대 MP(%)', 'max_mp_rate')}
+                {renderStat('공격력', 'attack_power')}
+                {renderStat('마력', 'magic_power')}
+                {renderStat('방어력', 'armor')}
+                {renderStat('이동속도', 'speed')}
+                {renderStat('점프력', 'jump')}
+                {renderStat('보스 몬스터 데미지', 'boss_damage')}
+                {renderStat('몬스터 방어율 무시', 'ignore_monster_armor')}
+                {renderStat('데미지', 'damage')}
+                {equipment.item_total_option?.equipment_level_decrease > 0 && (
+                  <div className="stat-line">
+                    <span className="stat-label">착용 감소 레벨:</span>
+                    <span className="stat-value"> -{equipment.item_total_option.equipment_level_decrease}</span>
+                  </div>
+                )}
+              </>
+            )}
+            {(parseInt(equipment.scroll_upgrade || 0) > 0 || parseInt(equipment.scroll_resilience_count || 0) > 0) && (
+              <div className="upgrade-info">
+                주문서 강화 {parseInt(equipment.scroll_upgrade || 0) + parseInt(equipment.scroll_resilience_count || 0)}회
+              </div>
+            )}
+            {parseInt(equipment.cuttable_count) > 0 && (
+              <div className="upgrade-info">가위 사용 가능 횟수   {parseInt(equipment.cuttable_count) === 255 ? 0 : equipment.cuttable_count}회</div>
+            )}
+            {equipment.scroll_upgradeable_count && (
+              <div className="upgrade-info">
+                업그레이드 가능 횟수: {equipment.scroll_upgradeable_count}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 잠재능력 */}
+        {equipment.potential_option_grade && (
+          <>
+            <div className="tooltip-divider"></div>
+            <div className="potential-header" style={{ color: rarityColor }}>
+              <span className="potential-icon" style={{ backgroundColor: rarityColor, color: '#000'}}>{
+              getRarityInitial(equipment.potential_option_grade)}
+              </span> 잠재능력 : {equipment.potential_option_grade}{isLimitedTime && <span style={{ color: '#aaa' }}> (추가 강화 불가)</span>}
+            </div>
+            {equipment.potential_option_1 && (
+              <div className="potential-option">{equipment.potential_option_1}</div>
+            )}
+            {equipment.potential_option_2 && (
+              <div className="potential-option">{equipment.potential_option_2}</div>
+            )}
+            {equipment.potential_option_3 && (
+              <div className="potential-option">{equipment.potential_option_3}</div>
+            )}
+          </>
+        )}
+
+        {isLimitedTime && (
+          <>
+            <div className="tooltip-divider"></div>
+            <div className="potential-header additional" style={{ color: '#aaa' }}>
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '12px',
+                height: '12px',
+                backgroundColor: '#333',
+                borderRadius: '3px',
+                marginRight: '5px',
+                border: '1px solid #000',
+                verticalAlign: 'middle'
+              }}>
+                <span style={{
+                  width: '4px',
+                  height: '4px',
+                  backgroundColor: '#aaa',
+                  borderRadius: '50%'
+                }}></span>
+              </span>
+              에디셔널 잠재능력 : 강화 불가
+            </div>
+          </>
+        )}
+
+        {/* 에디셔널 잠재능력 */}
+        {equipment.additional_potential_option_grade && (
+          <>
+            <div className="tooltip-divider"></div>
+            <div className="potential-header additional" style={{ color: additionalRarityColor }}>
+              <span className="potential-icon" style={{ background: additionalRarityColor, color: '#000'}}>{
+              getRarityInitial(equipment.additional_potential_option_grade)}
+              </span> 에디셔널 잠재능력 : {equipment.additional_potential_option_grade}
+            </div>
+            {equipment.additional_potential_option_1 && (
+              <div className="potential-option">{equipment.additional_potential_option_1}</div>
+            )}
+            {equipment.additional_potential_option_2 && (
+              <div className="potential-option">{equipment.additional_potential_option_2}</div>
+            )}
+            {equipment.additional_potential_option_3 && (
+              <div className="potential-option">{equipment.additional_potential_option_3}</div>
+            )}
+          </>
+        )}
+
+        {/* 소울 웨폰 */}
+        {equipment.soul_name && (
+          <>
+            <div className="tooltip-divider"></div>
+            <div className="potential-header soul-weapon" style={{ color: '#FFFF66' }}>
+              <span className="potential-icon" style={{ backgroundColor: '#FFFF66', color: '#000' }}>S</span> 소울 웨폰
+            </div>
+            <div className="potential-option">{equipment.soul_name}</div>
+            {equipment.soul_option && (
+              <div className="potential-option">{equipment.soul_option}</div>
+            )}
+          </>
         )}
       </div>
     );
-  };
-
-  return (
-    <div 
-      ref={tooltipRef}
-      className={`equipment-tooltip ${isPinned ? 'pinned' : ''}`}
-      style={{
-        left: adjustedPos.x,
-        top: adjustedPos.y
-      }}
-    >
-      {isPinned && (
-        <button onClick={onClose} className="tooltip-close-button">×</button>
-      )}
-      {/* 스타포스 별 표시 */}
-      {renderStarforce()}
-      {/* 아이템 이름 */}
-      <div className="item-name">
-        {equipment.item_name} {equipment.scroll_upgrade && parseInt(equipment.scroll_upgrade) > 0 && `(+${equipment.scroll_upgrade})`}
-      </div>
-      {formatExpireDate(equipment.date_expire) && (
-        <div className="item-trade-info" style={{ color: '#ff9933' }}>
-          유효 기간 : {formatExpireDate(equipment.date_expire)}
-        </div>
-      )}
-
-      <div className="tooltip-divider"></div>
-
-{/* 아이템 아이콘 및 정보 */}
-<div className="item-header">
-  {equipment.item_icon && (
-    <img src={equipment.item_icon} alt={equipment.item_name} className="item-icon" />
-  )}
-  <div className="item-info">
-    <div className="item-category">장비 분류</div>
-    <div className="item-job-req">{equipment.item_equipment_part}</div>
-    <div className="item-category">장착 직업</div>
-    <div className="item-job-req">{getJobCategory(characterClass)}</div>
-    <div className="item-category">요구 레벨</div>
-    <div className="item-level-req">
-      {equipment.item_total_option?.equipment_level_decrease > 0 ? (
-        <>
-          Lv. {equipment.item_base_option?.base_equipment_level - equipment.item_total_option?.equipment_level_decrease} ({equipment.item_base_option?.base_equipment_level} - {equipment.item_total_option?.equipment_level_decrease})
-        </>
-      ) : (
-        <>Lv. {equipment.item_base_option?.base_equipment_level || 0}</>
-      )}
-    </div>
-  </div>
-</div>
-
-      <div className="tooltip-divider"></div>
-
-
-      {/* 스탯 정보 */}
-      {(equipment.item_total_option || equipment.scroll_upgradeable_count || (parseInt(equipment.scroll_upgrade || 0) > 0 || parseInt(equipment.scroll_resilience_count || 0) > 0)) && (
-        <div className="item-stats">
-          {equipment.item_total_option && (
-            <>
-              {renderStat('STR', 'str')}
-              {renderStat('DEX', 'dex')}
-              {renderStat('INT', 'int')}
-              {renderStat('LUK', 'luk')}
-              {renderStat('최대 HP', 'max_hp')}
-              {renderStat('공격력', 'attack_power')}
-              {renderStat('마력', 'magic_power')}
-              {renderStat('방어력', 'armor')}
-              {renderStat('이동속도', 'speed')}
-              {renderStat('점프력', 'jump')}
-              {equipment.item_total_option?.equipment_level_decrease > 0 && (
-                <div className="stat-line">
-                  <span className="stat-label">착용 가능 레벨:</span>
-                  <span className="stat-value"> -{equipment.item_total_option.equipment_level_decrease}</span>
-                </div>
-              )}
-            </>
-          )}
-          {(parseInt(equipment.scroll_upgrade || 0) > 0 || parseInt(equipment.scroll_resilience_count || 0) > 0) && (
-            <div className="upgrade-info">
-              주문서 강화 {parseInt(equipment.scroll_upgrade || 0) + parseInt(equipment.scroll_resilience_count || 0)}회 (성공 {equipment.scroll_upgrade || 0}회, 실패 {equipment.scroll_resilience_count || 0}회)
-            </div>
-          )}
-          {equipment.golden_hammer_flag === '적용' && (
-            <div className="upgrade-info">황금 망치 제련 적용</div>
-          )}
-          {parseInt(equipment.cuttable_count) > 0 && (
-            <div className="upgrade-info">가위 사용 가능 횟수 : {parseInt(equipment.cuttable_count) === 255 ? 0 : equipment.cuttable_count}회</div>
-          )}
-          {equipment.scroll_upgradeable_count && (
-            <div className="upgrade-info">
-              업그레이드 가능 횟수: {equipment.scroll_upgradeable_count}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* 잠재능력 */}
-      {equipment.potential_option_grade && (
-        <>
-          <div className="tooltip-divider"></div>
-          <div className="potential-header" style={{ color: rarityColor }}>
-            <span className="potential-icon" style={{ backgroundColor: rarityColor, color: '#000'}}>{
-            getRarityInitial(equipment.potential_option_grade)}
-            </span> 잠재능력 : {equipment.potential_option_grade}{isLimitedTime && <span style={{ color: '#aaa' }}> (추가 강화 불가)</span>}
-          </div>
-          {equipment.potential_option_1 && (
-            <div className="potential-option">{equipment.potential_option_1}</div>
-          )}
-          {equipment.potential_option_2 && (
-            <div className="potential-option">{equipment.potential_option_2}</div>
-          )}
-          {equipment.potential_option_3 && (
-            <div className="potential-option">{equipment.potential_option_3}</div>
-          )}
-        </>
-      )}
-
-      {isLimitedTime && (
-        <>
-          <div className="tooltip-divider"></div>
-          <div className="potential-header additional" style={{ color: '#aaa' }}>
-            <span style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '12px',
-              height: '12px',
-              backgroundColor: '#333',
-              borderRadius: '3px',
-              marginRight: '5px',
-              border: '1px solid #000',
-              verticalAlign: 'middle'
-            }}>
-              <span style={{
-                width: '4px',
-                height: '4px',
-                backgroundColor: '#aaa',
-                borderRadius: '50%'
-              }}></span>
-            </span>
-            에디셔널 잠재능력 : 강화 불가
-          </div>
-        </>
-      )}
-
-      {/* 에디셔널 잠재능력 */}
-      {equipment.additional_potential_option_grade && (
-        <>
-          <div className="tooltip-divider"></div>
-          <div className="potential-header additional" style={{ color: additionalRarityColor }}>
-            <span className="potential-icon" style={{ background: additionalRarityColor, color: '#000'}}>{
-            getRarityInitial(equipment.additional_potential_option_grade)}
-            </span> 에디셔널 잠재능력 : {equipment.additional_potential_option_grade}
-          </div>
-          {equipment.additional_potential_option_1 && (
-            <div className="potential-option">{equipment.additional_potential_option_1}</div>
-          )}
-          {equipment.additional_potential_option_2 && (
-            <div className="potential-option">{equipment.additional_potential_option_2}</div>
-          )}
-          {equipment.additional_potential_option_3 && (
-            <div className="potential-option">{equipment.additional_potential_option_3}</div>
-          )}
-        </>
-      )}
-
-      {/* 소울 웨폰 */}
-      {equipment.soul_name && (
-        <>
-          <div className="tooltip-divider"></div>
-          <div className="potential-header soul-weapon" style={{ color: '#FFFF66' }}>
-            <span className="potential-icon" style={{ backgroundColor: '#FFFF66', color: '#000' }}>S</span> 소울 웨폰
-          </div>
-          <div className="potential-option">{equipment.soul_name}</div>
-          {equipment.soul_option && (
-            <div className="potential-option">{equipment.soul_option}</div>
-          )}
-        </>
-      )}
-    </div>
-  );
 };
 
 
@@ -542,7 +562,7 @@ function App() {
 
     if (num < 10000) return num.toLocaleString();
 
-    const units = ['', '만', '억', '조', '경'];
+    const units = ['', '만', '억', '조'];
     let result = '';
     let temp = num;
     let unitIndex = 0;
