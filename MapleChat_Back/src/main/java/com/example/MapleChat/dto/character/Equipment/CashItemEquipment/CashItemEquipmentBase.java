@@ -32,10 +32,10 @@ public class CashItemEquipmentBase {
     private String cashItemLabel;
 
     @JsonProperty("cash_item_coloring_prism")
-    private List<CashItemPrism> cashItemColoringPrism;
+    private List<CashItemColoringPrism> cashItemColoringPrism;
 
     @JsonProperty("cash_item_effect_prism")
-    private List<CashItemPrism> cashItemEffectPrism;
+    private List<CashItemEffectPrism> cashItemEffectPrism;
 
     @JsonProperty("item_gender")
     private String itemGender;

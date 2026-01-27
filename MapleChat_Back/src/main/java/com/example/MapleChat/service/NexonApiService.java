@@ -6,13 +6,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.MapleChat.dto.character.CharacterAbility;
 import com.example.MapleChat.dto.character.CharacterBasicInfo;
+import com.example.MapleChat.dto.character.CharacterBeautyEquipment;
 import com.example.MapleChat.dto.character.CharacterCashItemEquipment;
 import com.example.MapleChat.dto.character.CharacterHyperStat;
 import com.example.MapleChat.dto.character.CharacterItemEquipment;
 import com.example.MapleChat.dto.character.CharacterOcid;
 import com.example.MapleChat.dto.character.CharacterPopularity;
 import com.example.MapleChat.dto.character.CharacterPropensity;
+import com.example.MapleChat.dto.character.CharacterSetEffect;
 import com.example.MapleChat.dto.character.CharacterStat;
+import com.example.MapleChat.dto.character.CharacterSymbolEquipment;
 
 @Service
 public class NexonApiService {
@@ -160,5 +163,38 @@ public class NexonApiService {
     }
     public CharacterCashItemEquipment getCashEquipmentByName(String name) {
         return getCashEquipment(getId(name).getCharacterOcid());
+    }
+
+    public CharacterSymbolEquipment getSymbol(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/symbol-equipment")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterSymbolEquipment.class).block();
+    }
+    public CharacterSymbolEquipment getSymbolByName(String name) { 
+        return getSymbol(getId(name).getCharacterOcid());
+    }
+
+    public CharacterSetEffect getSetEffect(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/set-effect")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterSetEffect.class).block();
+    }
+    public CharacterSetEffect getSetEffectByName(String name) {
+        return getSetEffect(getId(name).getCharacterOcid());
+    }
+
+    public CharacterBeautyEquipment getBeautyEquipment(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/beauty-equipment")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterBeautyEquipment.class).block();
+    }
+    public CharacterBeautyEquipment getBeautyEquipmentByName(String name) {
+        return getBeautyEquipment(getId(name).getCharacterOcid());
     }
 }
