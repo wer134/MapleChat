@@ -2,12 +2,15 @@ package com.example.MapleChat.controller;
 
 import com.example.MapleChat.dto.character.CharacterAbility;
 import com.example.MapleChat.dto.character.CharacterBasicInfo;
+import com.example.MapleChat.dto.character.CharacterBeautyEquipment;
 import com.example.MapleChat.dto.character.CharacterCashItemEquipment;
 import com.example.MapleChat.dto.character.CharacterHyperStat;
 import com.example.MapleChat.dto.character.CharacterItemEquipment;
 import com.example.MapleChat.dto.character.CharacterPopularity;
 import com.example.MapleChat.dto.character.CharacterPropensity;
+import com.example.MapleChat.dto.character.CharacterSetEffect;
 import com.example.MapleChat.dto.character.CharacterStat;
+import com.example.MapleChat.dto.character.CharacterSymbolEquipment;
 import com.example.MapleChat.service.NexonApiService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -83,4 +86,20 @@ public class CharacterController {
     public CharacterCashItemEquipment getCashEquipment(@RequestParam String name) {
         return nexonApiService.getCashEquipmentByName(name);
     }
+
+    @GetMapping("/symbol-equipment")
+    public CharacterSymbolEquipment getSymbol(@RequestParam String name) {
+        return nexonApiService.getSymbolByName(name);
+    }
+
+    @GetMapping("/set-effect")
+    public CharacterSetEffect getSetEffect(@RequestParam String name) {
+        return nexonApiService.getSetEffectByName(name);
+    }
+
+    @GetMapping("/beauty-equipment")
+    public CharacterBeautyEquipment getBeautyEquipment(@RequestParam String name) {
+        return nexonApiService.getBeautyEquipmentByName(name);
+    }
+    
 }
