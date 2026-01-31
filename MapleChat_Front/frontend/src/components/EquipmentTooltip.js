@@ -142,8 +142,6 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
           <img src={equipment.item_icon} alt={equipment.item_name} className="item-icon" />
         )}
         <div className="item-info">
-          <div className="item-category">장비 분류</div>
-          <div className="item-job-req">{equipment.item_equipment_part || equipment.item_equipment_slot}</div>
           <div className="item-category">장착 직업</div>
           <div className="item-job-req">{getJobCategory(characterClass)}</div>
           <div className="item-category">요구 레벨</div>
@@ -164,6 +162,7 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
       {/* 스탯 정보 */}
       {(equipment.item_total_option || equipment.scroll_upgradeable_count || (parseInt(equipment.scroll_upgrade || 0) > 0 || parseInt(equipment.scroll_resilience_count || 0) > 0)) && (
         <div className="item-stats">
+          <div className="item-category">장비 분류 : {equipment.item_equipment_part || equipment.item_equipment_slot.replace(/[0-9]/g, '')}</div>
           {equipment.item_total_option && (
             <>
               {renderStat('STR', 'str')}
