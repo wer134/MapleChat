@@ -19,7 +19,22 @@ const EquipmentModal = ({ isOpen, onClose, equipmentInfo, activeTooltip, setActi
           <h3>장비 목록</h3>
           <div className="equipment-grid">
             {slotGrid.map((slot, index) => {
-              const equip = equipmentInfo.item_equipment.find(item => item.item_equipment_slot === slot.slot);
+              let equip = null;
+              
+              if (slot.slot) {
+                const matchingEquipments = equipmentInfo.item_equipment.filter(item => {
+                  const normalizedApiSlot = item.item_equipment_slot.replace(/[0-9]/g, '');
+                  const normalizedGridSlot = slot.slot.replace(/[0-9]/g, '');
+                  return normalizedApiSlot === normalizedGridSlot;
+                });
+                
+                if (slot.slotIndex && matchingEquipments.length >= slot.slotIndex) {
+                  equip = matchingEquipments[slot.slotIndex - 1];
+                } else if (!slot.slotIndex) {
+                  equip = matchingEquipments[0];
+                }
+              }
+              
               const rarityColor = equip ? getRarityColor(equip.potential_option_grade) : null;
               return (
                 <div 
