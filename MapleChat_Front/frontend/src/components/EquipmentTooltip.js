@@ -2,6 +2,12 @@ import React, { useLayoutEffect, useRef, useState } from 'react';
 import { formatExpireDate } from '../utils/formatters';
 import { getJobCategory, getMaxStarforce, getRarityColor, getRarityInitial } from '../utils/gameLogic';
 
+const FALLBACK_ICON_SVG =
+  'data:image/svg+xml,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"><rect fill="#2a2a2a" width="50" height="50"/><text x="25" y="28" text-anchor="middle" fill="#666" font-size="11">?</text></svg>'
+  );
+
 const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterClass }) => {
   const tooltipRef = useRef(null);
   const [adjustedPos, setAdjustedPos] = useState({ x: -9999, y: -9999 });
@@ -139,7 +145,15 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
       {/* 아이템 아이콘 및  정보 */}
       <div className="item-header">
         {equipment.item_icon && (
-          <img src={equipment.item_icon} alt={equipment.item_name} className="item-icon" />
+          <img
+            src={equipment.item_icon}
+            alt={equipment.item_name}
+            className="item-icon"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = FALLBACK_ICON_SVG;
+            }}
+          />
         )}
         <div className="item-info">
           <div className="item-category">장착 직업</div>
