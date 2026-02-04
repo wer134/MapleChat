@@ -1,9 +1,64 @@
 import React from 'react';
-import { slotGrid } from '../constants/equipmentSlots';
+import { equipmentCells } from '../constants/equipmentSlots';
 import { getRarityColor } from '../utils/gameLogic';
 
-const EquipmentModal = ({ isOpen, onClose, equipmentInfo, activeTooltip, setActiveTooltip }) => {
-  if (!isOpen || !equipmentInfo?.item_equipment?.length) return null;
+const normalizeSlot = (s) =>
+  (s || '')
+    .replace(/[0-9]/g, '')
+    .replace(/\s+/g, '')
+    .replace(/[()_\-]/g, '')
+    .trim();
+
+// 장비 하나가 정보 누락(이미지/능력치 등)인지 여부
+const isEquipmentIncomplete = (equip) => {
+  if (!equip) return false;
+  const hasIcon = !!equip.item_icon;
+  const hasStats = !!(equip.item_total_option || equip.item_base_option);
+  const hasName = !!equip.item_name;
+  return !hasIcon || !hasStats || !hasName;
+};
+
+const EquipmentModal = ({ isOpen, onClose, equipmentInfo, equipmentError, retryEquipment, activeTooltip, setActiveTooltip }) => {
+  if (!isOpen) return null;
+
+  const itemEquipment = equipmentInfo?.item_equipment ?? [];
+  const hasEquipment = itemEquipment.length > 0;
+  const incompleteItems = hasEquipment ? itemEquipment.filter(isEquipmentIncomplete) : [];
+  const showIncompleteBanner = incompleteItems.length > 0;
+
+  if (equipmentError && !hasEquipment) {
+    return (
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-content equipment-modal" onClick={(e) => e.stopPropagation()}>
+          <button className="modal-close" onClick={onClose}>×</button>
+          <h3>장비 목록</h3>
+          <div className="error-message">
+            장비 정보를 불러올 수 없습니다.
+            <button onClick={retryEquipment} className="retry-btn" title="재시도">↻</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!hasEquipment && !equipmentError) return null;
+
+  if (hasEquipment) {
+    const itemList = equipmentInfo?.item_equipment ?? [];
+    console.log(
+      'ANDROID candidates:',
+      itemList
+        .filter((x) => normalizeSlot(x.item_equipment_slot) === normalizeSlot('안드로이드'))
+        .map((x) => ({ slot: x.item_equipment_slot, name: x.item_name, icon: x.item_icon }))
+    );
+    console.log('equipmentInfo keys:', Object.keys(equipmentInfo || {}));
+  }
+
+  const FALLBACK_ICON_SVG =
+    "data:image/svg+xml," +
+    encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"><rect fill="#2a2a2a" width="50" height="50"/><text x="25" y="28" text-anchor="middle" fill="#666" font-size="11">?</text></svg>'
+    );
 
   return (
     <div className="modal-overlay" onClick={() => {
@@ -17,45 +72,65 @@ const EquipmentModal = ({ isOpen, onClose, equipmentInfo, activeTooltip, setActi
         <button className="modal-close" onClick={onClose}>×</button>
         <div className="equipment-list">
           <h3>장비 목록</h3>
+          {showIncompleteBanner && (
+            <div className="equipment-retry-banner">
+              일부 장비의 정보(이미지, 능력치 등)가 누락되었을 수 있습니다.
+              <button onClick={retryEquipment} className="retry-btn" title="장비 정보 다시 불러오기">↻ 다시 불러오기</button>
+            </div>
+          )}
           <div className="equipment-grid">
-            {slotGrid.map((slot, index) => {
-              let equip = null;
-              
-              if (slot.slot) {
-                const matchingEquipments = equipmentInfo.item_equipment.filter(item => {
-                  const normalizedApiSlot = item.item_equipment_slot.replace(/[0-9]/g, '');
-                  const normalizedGridSlot = slot.slot.replace(/[0-9]/g, '');
-                  return normalizedApiSlot === normalizedGridSlot;
-                });
-                
-                if (slot.slotIndex && matchingEquipments.length >= slot.slotIndex) {
-                  equip = matchingEquipments[slot.slotIndex - 1];
-                } else if (!slot.slotIndex) {
-                  equip = matchingEquipments[0];
-                }
+            {(equipmentCells ?? []).map((cell, idx) => {
+              const style = {
+                gridRow: `${cell.row} / span ${cell.rowSpan || 1}`,
+                gridColumn: `${cell.col} / span ${cell.colSpan || 1}`,
+              };
+
+              if (cell.type === 'preview') {
+                return <div key={idx} className="equipment-cell preview" style={style} />;
               }
-              
+              if (cell.type === 'mergedEmpty') {
+                return <div key={idx} className="equipment-cell bottom-merged" style={style} />;
+              }
+              if (cell.type === 'empty') {
+                return <div key={idx} className="equipment-item empty" style={style} />;
+              }
+
+              // cell.type === 'slot'
+              let equip = null;
+              const itemList = equipmentInfo?.item_equipment ?? [];
+              const target = normalizeSlot(cell.slot);
+              const matchingEquipments = itemList
+                .filter((item) => normalizeSlot(item.item_equipment_slot) === target)
+                .sort((a, b) =>
+                  (a.item_equipment_slot || '').localeCompare(b.item_equipment_slot || '', 'ko')
+                );
+              if (cell.slotIndex && matchingEquipments.length >= cell.slotIndex) {
+                equip = matchingEquipments[cell.slotIndex - 1];
+              } else {
+                equip = matchingEquipments[0] || null;
+              }
+
               const rarityColor = equip ? getRarityColor(equip.potential_option_grade) : null;
               return (
-                <div 
-                  key={index} 
+                <div
+                  key={idx}
                   className={`equipment-item ${!equip ? 'empty' : ''}`}
-                  style={rarityColor ? { '--hover-color': rarityColor } : {}}
+                  style={{ ...style, ...(rarityColor ? { '--hover-color': rarityColor } : {}) }}
                   onMouseEnter={(e) => {
                     if (equip && !activeTooltip.pinned) {
-                        setActiveTooltip({
-                          equipment: equip,
-                          pinned: false,
-                          position: { x: e.clientX + 15, y: e.clientY + 15 }
-                        });
+                      setActiveTooltip({
+                        equipment: equip,
+                        pinned: false,
+                        position: { x: e.clientX + 15, y: e.clientY + 15 },
+                      });
                     }
                   }}
                   onMouseMove={(e) => {
                     if (equip && !activeTooltip.pinned) {
-                        setActiveTooltip(prev => ({
-                          ...prev,
-                          position: { x: e.clientX + 15, y: e.clientY + 15 }
-                        }));
+                      setActiveTooltip((prev) => ({
+                        ...prev,
+                        position: { x: e.clientX + 15, y: e.clientY + 15 },
+                      }));
                     }
                   }}
                   onMouseLeave={() => {
@@ -71,7 +146,7 @@ const EquipmentModal = ({ isOpen, onClose, equipmentInfo, activeTooltip, setActi
                         setActiveTooltip({
                           equipment: equip,
                           pinned: true,
-                          position: { x: e.clientX + 15, y: e.clientY + 15 }
+                          position: { x: e.clientX + 15, y: e.clientY + 15 },
                         });
                       }
                     }
@@ -79,13 +154,27 @@ const EquipmentModal = ({ isOpen, onClose, equipmentInfo, activeTooltip, setActi
                 >
                   {equip ? (
                     <>
-                      {equip.item_icon && (
-                        <img src={equip.item_icon} alt={equip.item_name} />
+                      {equip.item_icon ? (
+                        <img
+                          src={equip.item_icon}
+                          alt={equip.item_name || cell.label}
+                          onLoad={(e) => {
+                            if (e.currentTarget.currentSrc && e.currentTarget.currentSrc.includes('/static/empty_img.png')) {
+                              e.currentTarget.src = FALLBACK_ICON_SVG;
+                            }
+                          }}
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = FALLBACK_ICON_SVG;
+                          }}
+                        />
+                      ) : (
+                        <span className="equipment-slot-fallback">{equip.item_name || cell.label}</span>
                       )}
                       <div className="equipment-name">{equip.item_name}</div>
                     </>
                   ) : (
-                    <span className="slot-label">{slot.label}</span>
+                    <span className="slot-label">{cell.label}</span>
                   )}
                 </div>
               );

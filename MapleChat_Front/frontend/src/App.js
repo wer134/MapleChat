@@ -26,6 +26,7 @@ function App() {
   const [hyperStatError, setHyperStatError] = useState(false);
   const [propensityError, setPropensityError] = useState(false);
   const [statError, setStatError] = useState(false);
+  const [equipmentError, setEquipmentError] = useState(false);
 
   const handleSearch = async () => {
     if (!characterName.trim()) {
@@ -48,6 +49,7 @@ function App() {
     setHyperStatError(false);
     setPropensityError(false);
     setStatError(false);
+    setEquipmentError(false);
 
   try {
     // 캐릭터 이름으로 바로 기본 정보 조회
@@ -63,6 +65,10 @@ function App() {
     if (equipmentResponse.ok) {
       const equipmentData = await equipmentResponse.json();
       setEquipmentInfo(equipmentData);
+      setEquipmentError(false);
+    } else {
+      setEquipmentError(true);
+      console.error('Equipment fetch failed:', equipmentResponse.status);
     }
 
     // 어빌리티 정보 조회
@@ -175,6 +181,22 @@ const handleKeyPress = (e) => {
     }
   };
 
+  const retryEquipment = async () => {
+    if (!characterInfo) return;
+    setEquipmentError(false);
+    try {
+      const response = await fetch(`/character/equipment?name=${encodeURIComponent(characterInfo.character_name)}`);
+      if (response.ok) {
+        const data = await response.json();
+        setEquipmentInfo(data);
+      } else {
+        setEquipmentError(true);
+      }
+    } catch (error) {
+      setEquipmentError(true);
+    }
+  };
+
   return (
     <div className="App">
       <div className="container">
@@ -223,6 +245,8 @@ const handleKeyPress = (e) => {
                 isOpen={isEquipmentModalOpen}
                 onClose={() => setIsEquipmentModalOpen(false)}
                 equipmentInfo={equipmentInfo}
+                equipmentError={equipmentError}
+                retryEquipment={retryEquipment}
                 activeTooltip={activeTooltip}
                 setActiveTooltip={setActiveTooltip}
               />
