@@ -11,6 +11,7 @@ import com.example.MapleChat.dto.character.CharacterPetEquipment;
 import com.example.MapleChat.dto.character.CharacterPopularity;
 import com.example.MapleChat.dto.character.CharacterPropensity;
 import com.example.MapleChat.dto.character.CharacterSetEffect;
+import com.example.MapleChat.dto.character.CharacterSkill;
 import com.example.MapleChat.dto.character.CharacterStat;
 import com.example.MapleChat.dto.character.CharacterSymbolEquipment;
 import com.example.MapleChat.service.NexonApiService;
@@ -112,5 +113,10 @@ public class CharacterController {
     @GetMapping("/pet-equipment")
     public CharacterPetEquipment getPetEquipment(@RequestParam String name) {
         return nexonApiService.getPetEquipmentByName(name);
+    }
+
+    @GetMapping("/skill")
+    public CharacterSkill getSkill(@RequestParam String name) {
+        return nexonApiService.getSkillByName(name);
     }
 }
