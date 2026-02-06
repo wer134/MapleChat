@@ -1,6 +1,7 @@
 package com.example.MapleChat.controller;
 
 import com.example.MapleChat.dto.character.CharacterAbility;
+import com.example.MapleChat.dto.character.CharacterAndroidEquipment;
 import com.example.MapleChat.dto.character.CharacterBasicInfo;
 import com.example.MapleChat.dto.character.CharacterBeautyEquipment;
 import com.example.MapleChat.dto.character.CharacterCashItemEquipment;
@@ -100,6 +101,11 @@ public class CharacterController {
     @GetMapping("/beauty-equipment")
     public CharacterBeautyEquipment getBeautyEquipment(@RequestParam String name) {
         return nexonApiService.getBeautyEquipmentByName(name);
+    }
+
+    @GetMapping("/android-equipment")
+    public CharacterAndroidEquipment getAndroidEquipment(@RequestParam String name) {
+        return nexonApiService.getAndroidEquipmentByName(name);
     }
     
 }
