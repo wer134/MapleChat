@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.MapleChat.dto.character.CharacterAbility;
+import com.example.MapleChat.dto.character.CharacterAndroidEquipment;
 import com.example.MapleChat.dto.character.CharacterBasicInfo;
 import com.example.MapleChat.dto.character.CharacterBeautyEquipment;
 import com.example.MapleChat.dto.character.CharacterCashItemEquipment;
@@ -196,5 +197,16 @@ public class NexonApiService {
     }
     public CharacterBeautyEquipment getBeautyEquipmentByName(String name) {
         return getBeautyEquipment(getId(name).getCharacterOcid());
+    }
+
+    public CharacterAndroidEquipment getAndroidEquipment(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/android-equipment")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterAndroidEquipment.class).block();
+    }
+    public CharacterAndroidEquipment getAndroidEquipmentByName(String name) {
+        return getAndroidEquipment(getId(name).getCharacterOcid());
     }
 }
