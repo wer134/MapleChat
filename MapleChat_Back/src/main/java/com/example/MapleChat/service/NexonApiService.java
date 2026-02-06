@@ -12,6 +12,7 @@ import com.example.MapleChat.dto.character.CharacterCashItemEquipment;
 import com.example.MapleChat.dto.character.CharacterHyperStat;
 import com.example.MapleChat.dto.character.CharacterItemEquipment;
 import com.example.MapleChat.dto.character.CharacterOcid;
+import com.example.MapleChat.dto.character.CharacterPetEquipment;
 import com.example.MapleChat.dto.character.CharacterPopularity;
 import com.example.MapleChat.dto.character.CharacterPropensity;
 import com.example.MapleChat.dto.character.CharacterSetEffect;
@@ -209,4 +210,16 @@ public class NexonApiService {
     public CharacterAndroidEquipment getAndroidEquipmentByName(String name) {
         return getAndroidEquipment(getId(name).getCharacterOcid());
     }
+
+    public CharacterPetEquipment getPetEquipment(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/pet-equipment")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterPetEquipment.class).block();
+    }
+    public CharacterPetEquipment getPetEquipmentByName(String name) {
+        return getPetEquipment(getId(name).getCharacterOcid());
+    }
+    
 }
