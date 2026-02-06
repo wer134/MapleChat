@@ -7,6 +7,7 @@ import com.example.MapleChat.dto.character.CharacterBeautyEquipment;
 import com.example.MapleChat.dto.character.CharacterCashItemEquipment;
 import com.example.MapleChat.dto.character.CharacterHyperStat;
 import com.example.MapleChat.dto.character.CharacterItemEquipment;
+import com.example.MapleChat.dto.character.CharacterPetEquipment;
 import com.example.MapleChat.dto.character.CharacterPopularity;
 import com.example.MapleChat.dto.character.CharacterPropensity;
 import com.example.MapleChat.dto.character.CharacterSetEffect;
@@ -108,4 +109,8 @@ public class CharacterController {
         return nexonApiService.getAndroidEquipmentByName(name);
     }
     
+    @GetMapping("/pet-equipment")
+    public CharacterPetEquipment getPetEquipment(@RequestParam String name) {
+        return nexonApiService.getPetEquipmentByName(name);
+    }
 }
