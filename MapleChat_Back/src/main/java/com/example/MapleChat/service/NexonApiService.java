@@ -16,6 +16,7 @@ import com.example.MapleChat.dto.character.CharacterPetEquipment;
 import com.example.MapleChat.dto.character.CharacterPopularity;
 import com.example.MapleChat.dto.character.CharacterPropensity;
 import com.example.MapleChat.dto.character.CharacterSetEffect;
+import com.example.MapleChat.dto.character.CharacterSkill;
 import com.example.MapleChat.dto.character.CharacterStat;
 import com.example.MapleChat.dto.character.CharacterSymbolEquipment;
 
@@ -220,6 +221,17 @@ public class NexonApiService {
     }
     public CharacterPetEquipment getPetEquipmentByName(String name) {
         return getPetEquipment(getId(name).getCharacterOcid());
+    }
+
+    public CharacterSkill getSkill(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/skill")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterSkill.class).block();
+    }
+    public CharacterSkill getSkillByName(String name) {
+        return getSkill(getId(name).getCharacterOcid());
     }
     
 }
