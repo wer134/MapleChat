@@ -12,7 +12,9 @@ import com.example.MapleChat.dto.character.CharacterAndroidEquipment;
 import com.example.MapleChat.dto.character.CharacterBasicInfo;
 import com.example.MapleChat.dto.character.CharacterBeautyEquipment;
 import com.example.MapleChat.dto.character.CharacterCashItemEquipment;
+import com.example.MapleChat.dto.character.CharacterDojang;
 import com.example.MapleChat.dto.character.CharacterHexaMatrix;
+import com.example.MapleChat.dto.character.CharacterHexaMatrixStat;
 import com.example.MapleChat.dto.character.CharacterHyperStat;
 import com.example.MapleChat.dto.character.CharacterItemEquipment;
 import com.example.MapleChat.dto.character.CharacterLinkSkill;
@@ -25,6 +27,7 @@ import com.example.MapleChat.dto.character.CharacterSkill;
 import com.example.MapleChat.dto.character.CharacterStat;
 import com.example.MapleChat.dto.character.CharacterSymbolEquipment;
 import com.example.MapleChat.dto.character.CharacterVMatrix;
+import com.example.MapleChat.dto.character.RingExhangeSkillEquipment;
 
 @Service
 public class NexonApiService {
@@ -273,9 +276,42 @@ public class NexonApiService {
                 .path("/maplestory/v1/character/hexamatrix")
                 .queryParam("ocid", ocid)
                 .build()).retrieve().bodyToMono(CharacterHexaMatrix.class).block();
-
     }
     public CharacterHexaMatrix getHexaMatrixByName(String name) {
         return getHexaMatrix(getOcid(name));
     }
+
+    public CharacterHexaMatrixStat getHexaMatrixStat(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/hexamatrix-stat")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterHexaMatrixStat.class).block();
+    }
+    public CharacterHexaMatrixStat getHexaMatrixStatByName(String name) {
+        return getHexaMatrixStat(getOcid(name));
+    }
+
+    public CharacterDojang getDojang(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/dojang")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(CharacterDojang.class).block();
+    }
+    public CharacterDojang getDojangByName(String name) {
+        return getDojang(getOcid(name));
+    }
+
+    public RingExhangeSkillEquipment getRingExhangeSkillEquipment(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/character/ring-exchange-skill-equipment")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(RingExhangeSkillEquipment.class).block();
+    }
+    public RingExhangeSkillEquipment getRingExhangeSkillEquipmentByName(String name) {
+        return getRingExhangeSkillEquipment(getOcid(name));
+    }
+
 }
