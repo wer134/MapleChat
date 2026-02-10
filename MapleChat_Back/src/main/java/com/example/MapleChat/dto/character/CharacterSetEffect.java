@@ -2,8 +2,8 @@ package com.example.MapleChat.dto.character;
 
 import java.util.List;
 
-import com.example.MapleChat.dto.character.Effect.SetEffect.SetEffectInfo;
-import com.example.MapleChat.dto.character.Effect.SetEffect.SetOptionFull;
+import com.example.MapleChat.dto.character.effect.setEffect.SetEffectInfo;
+import com.example.MapleChat.dto.character.effect.setEffect.SetOptionFull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 

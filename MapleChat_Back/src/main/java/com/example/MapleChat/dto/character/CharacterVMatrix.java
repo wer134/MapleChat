@@ -2,7 +2,7 @@ package com.example.MapleChat.dto.character;
 
 import java.util.List;
 
-import com.example.MapleChat.dto.character.Skills.VMatrix.VcoreEquipment;
+import com.example.MapleChat.dto.character.skills.vMatrix.VcoreEquipment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 

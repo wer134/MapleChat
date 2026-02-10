@@ -2,8 +2,8 @@ package com.example.MapleChat.dto.character;
 
 import java.util.List;
 
-import com.example.MapleChat.dto.character.Equipment.PetEquipment.PetAutoSkill;
-import com.example.MapleChat.dto.character.Equipment.PetEquipment.PetEquipment;
+import com.example.MapleChat.dto.character.equipment.petEquipment.PetAutoSkill;
+import com.example.MapleChat.dto.character.equipment.petEquipment.PetEquipment;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 

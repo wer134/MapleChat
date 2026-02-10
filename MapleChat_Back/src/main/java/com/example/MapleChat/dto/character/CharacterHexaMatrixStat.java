@@ -2,8 +2,8 @@ package com.example.MapleChat.dto.character;
 
 import java.util.List;
 
-import com.example.MapleChat.dto.character.Skills.HexaMatrix.HexaStatCore;
-import com.example.MapleChat.dto.character.Skills.HexaMatrix.HexaStatCorePreset;
+import com.example.MapleChat.dto.character.skills.hexaMatrix.HexaStatCore;
+import com.example.MapleChat.dto.character.skills.hexaMatrix.HexaStatCorePreset;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
