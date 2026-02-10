@@ -2,7 +2,7 @@ package com.example.MapleChat.dto.character;
 
 import java.util.List;
 
-import com.example.MapleChat.dto.character.Skill.SkillInfo;
+import com.example.MapleChat.dto.character.Skills.Skill.SkillInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 

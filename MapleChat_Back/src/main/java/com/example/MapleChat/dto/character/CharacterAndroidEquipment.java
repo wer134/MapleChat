@@ -56,11 +56,11 @@ public class CharacterAndroidEquipment {
     private Long presetNo;
 
     @JsonProperty("android_preset_1")
-    private List<AndroidPreset> androidPreset1;
+    private AndroidPreset androidPreset1;
 
     @JsonProperty("android_preset_2")
-    private List<AndroidPreset> androidPreset2;
+    private AndroidPreset androidPreset2;
 
     @JsonProperty("android_preset_3")
-    private List<AndroidPreset> androidPreset3;
+    private AndroidPreset androidPreset3;
 }
