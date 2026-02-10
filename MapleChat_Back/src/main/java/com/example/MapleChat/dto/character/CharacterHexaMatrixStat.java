@@ -1,4 +1,4 @@
-package com.example.MapleChat.dto;
+package com.example.MapleChat.dto.character;
 
 import java.util.List;
 
