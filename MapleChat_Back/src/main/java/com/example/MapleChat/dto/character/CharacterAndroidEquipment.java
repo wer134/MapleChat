@@ -2,11 +2,11 @@ package com.example.MapleChat.dto.character;
 
 import java.util.List;
 
-import com.example.MapleChat.dto.character.Equipment.AndroidEquipment.AndroidCashItemEquipment;
-import com.example.MapleChat.dto.character.Equipment.AndroidEquipment.AndroidFace;
-import com.example.MapleChat.dto.character.Equipment.AndroidEquipment.AndroidHair;
-import com.example.MapleChat.dto.character.Equipment.AndroidEquipment.AndroidPreset;
-import com.example.MapleChat.dto.character.Equipment.AndroidEquipment.AndroidSkin;
+import com.example.MapleChat.dto.character.equipment.androidEquipment.AndroidCashItemEquipment;
+import com.example.MapleChat.dto.character.equipment.androidEquipment.AndroidFace;
+import com.example.MapleChat.dto.character.equipment.androidEquipment.AndroidHair;
+import com.example.MapleChat.dto.character.equipment.androidEquipment.AndroidPreset;
+import com.example.MapleChat.dto.character.equipment.androidEquipment.AndroidSkin;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;

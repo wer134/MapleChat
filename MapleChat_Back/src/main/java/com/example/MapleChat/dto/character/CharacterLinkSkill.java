@@ -2,10 +2,10 @@ package com.example.MapleChat.dto.character;
 
 import java.util.List;
 
-import com.example.MapleChat.dto.character.Skills.LinkSkill.LinkSkill;
-import com.example.MapleChat.dto.character.Skills.LinkSkill.LinkSkillPreset;
-import com.example.MapleChat.dto.character.Skills.LinkSkill.OwnedLinkSkill;
-import com.example.MapleChat.dto.character.Skills.LinkSkill.OwnedLinkSkillPreset;
+import com.example.MapleChat.dto.character.skills.linkSkill.LinkSkill;
+import com.example.MapleChat.dto.character.skills.linkSkill.LinkSkillPreset;
+import com.example.MapleChat.dto.character.skills.linkSkill.OwnedLinkSkill;
+import com.example.MapleChat.dto.character.skills.linkSkill.OwnedLinkSkillPreset;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 

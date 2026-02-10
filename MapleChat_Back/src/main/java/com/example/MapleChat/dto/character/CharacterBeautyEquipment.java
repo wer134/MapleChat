@@ -1,11 +1,11 @@
 package com.example.MapleChat.dto.character;
 
-import com.example.MapleChat.dto.character.Equipment.BeautyEquipment.AdditionalCharacterFace;
-import com.example.MapleChat.dto.character.Equipment.BeautyEquipment.AdditionalCharacterHair;
-import com.example.MapleChat.dto.character.Equipment.BeautyEquipment.AdditionalCharacterSkin;
-import com.example.MapleChat.dto.character.Equipment.BeautyEquipment.CharacterFace;
-import com.example.MapleChat.dto.character.Equipment.BeautyEquipment.CharacterHair;
-import com.example.MapleChat.dto.character.Equipment.BeautyEquipment.CharacterSkin;
+import com.example.MapleChat.dto.character.equipment.beautyEquipment.AdditionalCharacterFace;
+import com.example.MapleChat.dto.character.equipment.beautyEquipment.AdditionalCharacterHair;
+import com.example.MapleChat.dto.character.equipment.beautyEquipment.AdditionalCharacterSkin;
+import com.example.MapleChat.dto.character.equipment.beautyEquipment.CharacterFace;
+import com.example.MapleChat.dto.character.equipment.beautyEquipment.CharacterHair;
+import com.example.MapleChat.dto.character.equipment.beautyEquipment.CharacterSkin;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
