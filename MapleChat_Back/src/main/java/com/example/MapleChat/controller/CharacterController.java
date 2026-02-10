@@ -5,8 +5,10 @@ import com.example.MapleChat.dto.character.CharacterAndroidEquipment;
 import com.example.MapleChat.dto.character.CharacterBasicInfo;
 import com.example.MapleChat.dto.character.CharacterBeautyEquipment;
 import com.example.MapleChat.dto.character.CharacterCashItemEquipment;
+import com.example.MapleChat.dto.character.CharacterHexaMatrix;
 import com.example.MapleChat.dto.character.CharacterHyperStat;
 import com.example.MapleChat.dto.character.CharacterItemEquipment;
+import com.example.MapleChat.dto.character.CharacterLinkSkill;
 import com.example.MapleChat.dto.character.CharacterPetEquipment;
 import com.example.MapleChat.dto.character.CharacterPopularity;
 import com.example.MapleChat.dto.character.CharacterPropensity;
@@ -14,6 +16,7 @@ import com.example.MapleChat.dto.character.CharacterSetEffect;
 import com.example.MapleChat.dto.character.CharacterSkill;
 import com.example.MapleChat.dto.character.CharacterStat;
 import com.example.MapleChat.dto.character.CharacterSymbolEquipment;
+import com.example.MapleChat.dto.character.CharacterVMatrix;
 import com.example.MapleChat.service.NexonApiService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -118,5 +121,20 @@ public class CharacterController {
     @GetMapping("/skill")
     public CharacterSkill getSkill(@RequestParam String name) {
         return nexonApiService.getSkillByName(name);
+    }
+
+    @GetMapping("/link-skill")
+    public CharacterLinkSkill getLinkSkill(@RequestParam String name) {
+        return nexonApiService.getLinkSkillByName(name);
+    }
+
+    @GetMapping("/vmatrix")
+    public CharacterVMatrix getVMatrix(@RequestParam String name) {
+        return nexonApiService.getVMatrixByName(name);
+    }
+
+    @GetMapping("/hexamatrix")
+    public CharacterHexaMatrix getHexaMatrix(@RequestParam String name) {
+        return nexonApiService.getHexaMatrixByName(name);
     }
 }

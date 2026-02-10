@@ -18,5 +18,4 @@ public class AndroidSkin {
     private Long saturation;
 
     @JsonProperty("brightness")
-    private Long brightNess;;
-}
+    private Long brightNess;}
