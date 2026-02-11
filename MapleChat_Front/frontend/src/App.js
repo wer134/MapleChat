@@ -1,3 +1,6 @@
+/**
+ * 메인 앱: 캐릭터 검색·검색 기록·검색 결과(헤더+스탯/장비 모달)·장비 툴팁.
+ */
 import React, { useState } from 'react';
 import './App.css';
 import CharacterHeader from './components/CharacterHeader';
@@ -5,8 +8,24 @@ import StatModal from './components/StatModal';
 import EquipmentModal from './components/EquipmentModal';
 import EquipmentTooltip from './components/EquipmentTooltip';
 
+/** 검색 기록 localStorage 키. 최근 검색한 캐릭터명 목록 저장 */
+const SEARCH_HISTORY_KEY = 'maplechat_search_history';
+const MAX_SEARCH_HISTORY = 10;
+
+/** 앱 로드 시 저장된 검색 기록 불러오기 */
+function loadSearchHistory() {
+  try {
+    const raw = localStorage.getItem(SEARCH_HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
 function App() {
   const [characterName, setCharacterName] = useState('');
+  const [searchHistory, setSearchHistory] = useState(loadSearchHistory);
+  const [showSearchHistory, setShowSearchHistory] = useState(false);
   const [characterInfo, setCharacterInfo] = useState(null);
   const [equipmentInfo, setEquipmentInfo] = useState(null);
   const [abilityInfo, setAbilityInfo] = useState(null);
@@ -27,13 +46,16 @@ function App() {
   const [propensityError, setPropensityError] = useState(false);
   const [statError, setStatError] = useState(false);
   const [equipmentError, setEquipmentError] = useState(false);
+  const [androidInfo, setAndroidInfo] = useState(null);
 
-  const handleSearch = async () => {
-    if (!characterName.trim()) {
+  const handleSearch = async (nameOverride) => {
+    const searchName = (nameOverride ?? characterName).trim();
+    if (!searchName) {
       setError('Please enter a character name');
       return;
     }
-  
+
+    setShowSearchHistory(false);
     setLoading(true);
     setError(null);
     setCharacterInfo(null);
@@ -50,18 +72,26 @@ function App() {
     setPropensityError(false);
     setStatError(false);
     setEquipmentError(false);
+    setAndroidInfo(null);
 
   try {
-    // 캐릭터 이름으로 바로 기본 정보 조회
-    const basicResponse = await fetch(`/character/basic?name=${encodeURIComponent(characterName)}`);
+    // 기본 정보 → 상단 캐릭터 헤더(이름, 레벨, 직업, 월드, 아바타) 표시용
+    const basicResponse = await fetch(`/character/basic?name=${encodeURIComponent(searchName)}`);
     if (!basicResponse.ok) {
       throw new Error('Character not found');
     }
     const basicData = await basicResponse.json();
     setCharacterInfo(basicData);
 
-    // 장비 정보도 함께 가져오기
-    const equipmentResponse = await fetch(`/character/equipment?name=${encodeURIComponent(characterName)}`);
+    // 검색 성공 시만 검색창 드롭다운용 최근 검색 목록에 추가
+    setSearchHistory((prev) => {
+      const next = [searchName, ...prev.filter((n) => n !== searchName)].slice(0, MAX_SEARCH_HISTORY);
+      localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(next));
+      return next;
+    });
+
+    // 장비 목록 모달에 표시할 아이템 장비 데이터
+    const equipmentResponse = await fetch(`/character/equipment?name=${encodeURIComponent(searchName)}`);
     if (equipmentResponse.ok) {
       const equipmentData = await equipmentResponse.json();
       setEquipmentInfo(equipmentData);
@@ -71,8 +101,16 @@ function App() {
       console.error('Equipment fetch failed:', equipmentResponse.status);
     }
 
-    // 어빌리티 정보 조회
-    const abilityResponse = await fetch(`/character/ability?name=${encodeURIComponent(characterName)}`);
+    // 장비 목록 모달의 '안드로이드' 슬롯 표시용 (일반 장비 API에 없을 때 사용)
+    const androidResponse = await fetch(`/character/android-equipment?name=${encodeURIComponent(searchName)}`);
+    if (androidResponse.ok) {
+      setAndroidInfo(await androidResponse.json());
+    } else {
+      setAndroidInfo(null);
+    }
+
+    // 스탯 모달의 어빌리티 탭 표시용
+    const abilityResponse = await fetch(`/character/ability?name=${encodeURIComponent(searchName)}`);
     if (abilityResponse.ok) {
       setAbilityInfo(await abilityResponse.json());
     } else {
@@ -80,8 +118,8 @@ function App() {
       console.error('Ability fetch failed:', abilityResponse.status);
     }
 
-    // 성향 정보 조회
-    const propensityResponse = await fetch(`/character/propensity?name=${encodeURIComponent(characterName)}`);
+    // 스탯 모달의 성향 탭 표시용
+    const propensityResponse = await fetch(`/character/propensity?name=${encodeURIComponent(searchName)}`);
     if (propensityResponse.ok) {
       const data = await propensityResponse.json();
       console.log('Propensity Data:', data);
@@ -91,8 +129,8 @@ function App() {
       console.error('Propensity fetch failed:', propensityResponse.status);
     }
 
-    // 스탯 정보 조회
-    const statResponse = await fetch(`/character/stat?name=${encodeURIComponent(characterName)}`);
+    // 스탯 모달의 스탯 탭 표시용
+    const statResponse = await fetch(`/character/stat?name=${encodeURIComponent(searchName)}`);
     if (statResponse.ok) {
       setStatInfo(await statResponse.json());
     } else {
@@ -101,7 +139,7 @@ function App() {
     }
 
     // 하이퍼 스탯 정보 조회
-    const hyperStatResponse = await fetch(`/character/hyper-stat?name=${encodeURIComponent(characterName)}`);
+    const hyperStatResponse = await fetch(`/character/hyper-stat?name=${encodeURIComponent(searchName)}`);
     if (hyperStatResponse.ok) {
       setHyperStatInfo(await hyperStatResponse.json());
     } else {
@@ -181,6 +219,14 @@ const handleKeyPress = (e) => {
     }
   };
 
+  const removeSearchHistoryItem = (index) => {
+    setSearchHistory((prev) => {
+      const next = prev.filter((_, i) => i !== index);
+      localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(next));
+      return next;
+    });
+  };
+
   const retryEquipment = async () => {
     if (!characterInfo) return;
     setEquipmentError(false);
@@ -202,17 +248,51 @@ const handleKeyPress = (e) => {
       <div className="container">
         <h1>MapleStory Character information</h1>
         <div className="search-box">
-          <input
-            type="text"
-            placeholder="Enter character name"
-            value={characterName}
-            onChange={(e) => setCharacterName(e.target.value)}
-            onKeyPress={handleKeyPress}
-          />
-          <button onClick={handleSearch} disabled={loading}>
-            {loading ? 'Searching...' : 'Search'}
-            </button>
+          <div className="search-input-wrap">
+            <input
+              type="text"
+              placeholder="Enter character name"
+              value={characterName}
+              onChange={(e) => setCharacterName(e.target.value)}
+              onKeyPress={handleKeyPress}
+              onFocus={() => setShowSearchHistory(true)}
+              onBlur={() => setTimeout(() => setShowSearchHistory(false), 200)}
+            />
+            {showSearchHistory && searchHistory.length > 0 && (
+              <ul className="search-history">
+                {searchHistory.map((name, i) => (
+                  <li key={`${name}-${i}`} onMouseDown={(e) => e.preventDefault()}>
+                    <span
+                      className="search-history-text"
+                      onClick={() => {
+                        setCharacterName(name);
+                        setShowSearchHistory(false);
+                        handleSearch(name);
+                      }}
+                    >
+                      {name}
+                    </span>
+                    <button
+                      type="button"
+                      className="search-history-remove"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeSearchHistoryItem(i);
+                      }}
+                      onMouseDown={(e) => e.preventDefault()}
+                      title="삭제"
+                    >
+                      ×
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
+          <button onClick={() => handleSearch()} disabled={loading}>
+            {loading ? 'Searching...' : 'Search'}
+          </button>
+        </div>
 
           {error && <div className="error">{error}</div>}
 
@@ -247,11 +327,13 @@ const handleKeyPress = (e) => {
                 equipmentInfo={equipmentInfo}
                 equipmentError={equipmentError}
                 retryEquipment={retryEquipment}
+                androidInfo={androidInfo}
+                characterImage={characterInfo?.character_image}
                 activeTooltip={activeTooltip}
                 setActiveTooltip={setActiveTooltip}
               />
 
-              {/* 장비 툴팁 */}
+              {/* 장비 슬롯 호버/클릭 시 뜨는 상세 툴팁 (이름, 옵션, 잠재 등) */}
               {activeTooltip.equipment && (
                 <EquipmentTooltip 
                   equipment={activeTooltip.equipment} 

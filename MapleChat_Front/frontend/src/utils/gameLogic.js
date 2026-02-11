@@ -1,3 +1,4 @@
+/** 직업→직업군, 장비 레어리티/스타포스 등 게임 로직 유틸 */
 export const getJobCategory = (jobName) => {
   const jobMap = {
     // 전사

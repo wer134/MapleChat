@@ -1,3 +1,4 @@
+/** 장비 슬롯 호버/클릭 시 뜨는 상세 툴팁 (이름, 아이콘, 스탯, 잠재/에디/소울 등) */
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { formatExpireDate } from '../utils/formatters';
 import { getJobCategory, getMaxStarforce, getRarityColor, getRarityInitial } from '../utils/gameLogic';
@@ -20,17 +21,13 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
       let x = position.x;
       let y = position.y;
 
-      // 오른쪽 화면 밖으로 나가는 경우
+      // 툴팁이 뷰포트 밖으로 나가지 않도록 위치 보정
       if (x + offsetWidth > innerWidth) {
         x = x - offsetWidth - 20;
       }
-
-      // 아래쪽 화면 밖으로 나가는 경우
       if (y + offsetHeight > innerHeight) {
         y = y - offsetHeight - 20;
       }
-
-      // 위쪽 화면 밖으로 나가는 경우
       if (y < 0) {
         y = 10;
       }
@@ -60,13 +57,11 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
       allStars.push('grey');
     }
 
-    // 5개씩 묶기
+    // 스타포스 별 5개씩 묶어 한 줄에 3묶음까지 표시
     const starGroups = [];
     for (let i = 0; i < allStars.length; i += 5) {
       starGroups.push(allStars.slice(i, i + 5));
     }
-
-    // 3묶음씩 한 줄에 배치
     const rows = [];
     for (let i = 0; i < starGroups.length; i += 3) {
       rows.push(starGroups.slice(i, i + 3));
@@ -128,9 +123,9 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
       {isPinned && (
         <button onClick={onClose} className="tooltip-close-button">×</button>
       )}
-      {/* 스타포스 별 표시 */}
+      {/* 스타포스 강화 별 (5개 단위, 3묶음/줄) */}
       {renderStarforce()}
-      {/* 아이템 이름 */}
+      {/* 장비 이름 */}
       <div className="item-name">
         {equipment.item_name}
       </div>
@@ -142,7 +137,7 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
 
       <div className="tooltip-divider"></div>
 
-      {/* 아이템 아이콘 및  정보 */}
+      {/* 장비 아이콘 + 요구 직업/레벨 */}
       <div className="item-header">
         {equipment.item_icon && (
           <img
@@ -173,7 +168,7 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
 
       <div className="tooltip-divider"></div>
 
-      {/* 스탯 정보 */}
+      {/* 스탯(STR/DEX/INT 등)·강화 정보 */}
       {(equipment.item_total_option || equipment.scroll_upgradeable_count || (parseInt(equipment.scroll_upgrade || 0) > 0 || parseInt(equipment.scroll_resilience_count || 0) > 0)) && (
         <div className="item-stats">
           <div className="item-category">장비 분류 : {equipment.item_equipment_part || equipment.item_equipment_slot.replace(/[0-9]/g, '')}</div>
@@ -216,7 +211,7 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
         </div>
       )}
 
-      {/* 잠재능력 */}
+      {/* 잠재능력 (등급·옵션 3줄) */}
       {equipment.potential_option_grade && (
         <>
           <div className="tooltip-divider"></div>
@@ -286,7 +281,7 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
         </>
       )}
 
-      {/* 소울 웨폰 */}
+      {/* 소울 웨폰 (이름·옵션) */}
       {equipment.soul_name && (
         <>
           <div className="tooltip-divider"></div>

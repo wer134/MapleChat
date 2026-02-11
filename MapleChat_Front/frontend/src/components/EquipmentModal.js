@@ -1,3 +1,4 @@
+/** 장비 목록 모달: 그리드로 장비 슬롯·캐릭터 이미지 표시, 슬롯 호버/클릭 시 툴팁 연동 */
 import React from 'react';
 import { equipmentCells } from '../constants/equipmentSlots';
 import { getRarityColor } from '../utils/gameLogic';
@@ -6,10 +7,10 @@ const normalizeSlot = (s) =>
   (s || '')
     .replace(/[0-9]/g, '')
     .replace(/\s+/g, '')
-    .replace(/[()_\-]/g, '')
+    .replace(/[()_-]/g, '')
     .trim();
 
-// 장비 하나가 정보 누락(이미지/능력치 등)인지 여부
+/** 장비 아이템이 이미지/능력치/이름 중 하나라도 없으면 true → "다시 불러오기" 배너 표시 */
 const isEquipmentIncomplete = (equip) => {
   if (!equip) return false;
   const hasIcon = !!equip.item_icon;
@@ -18,7 +19,7 @@ const isEquipmentIncomplete = (equip) => {
   return !hasIcon || !hasStats || !hasName;
 };
 
-const EquipmentModal = ({ isOpen, onClose, equipmentInfo, equipmentError, retryEquipment, activeTooltip, setActiveTooltip }) => {
+const EquipmentModal = ({ isOpen, onClose, equipmentInfo, equipmentError, retryEquipment, androidInfo, characterImage, activeTooltip, setActiveTooltip }) => {
   if (!isOpen) return null;
 
   const itemEquipment = equipmentInfo?.item_equipment ?? [];
@@ -42,17 +43,6 @@ const EquipmentModal = ({ isOpen, onClose, equipmentInfo, equipmentError, retryE
   }
 
   if (!hasEquipment && !equipmentError) return null;
-
-  if (hasEquipment) {
-    const itemList = equipmentInfo?.item_equipment ?? [];
-    console.log(
-      'ANDROID candidates:',
-      itemList
-        .filter((x) => normalizeSlot(x.item_equipment_slot) === normalizeSlot('안드로이드'))
-        .map((x) => ({ slot: x.item_equipment_slot, name: x.item_name, icon: x.item_icon }))
-    );
-    console.log('equipmentInfo keys:', Object.keys(equipmentInfo || {}));
-  }
 
   const FALLBACK_ICON_SVG =
     "data:image/svg+xml," +
@@ -86,7 +76,17 @@ const EquipmentModal = ({ isOpen, onClose, equipmentInfo, equipmentError, retryE
               };
 
               if (cell.type === 'preview') {
-                return <div key={idx} className="equipment-cell preview" style={style} />;
+                return (
+                  <div key={idx} className="equipment-cell preview" style={style}>
+                    {characterImage ? (
+                      <img
+                        src={characterImage}
+                        alt="캐릭터"
+                        className="equipment-preview-character"
+                      />
+                    ) : null}
+                  </div>
+                );
               }
               if (cell.type === 'mergedEmpty') {
                 return <div key={idx} className="equipment-cell bottom-merged" style={style} />;
@@ -95,7 +95,7 @@ const EquipmentModal = ({ isOpen, onClose, equipmentInfo, equipmentError, retryE
                 return <div key={idx} className="equipment-item empty" style={style} />;
               }
 
-              // cell.type === 'slot'
+              // 슬롯 셀: item_equipment에서 slot명으로 매칭해 해당 장비 표시
               let equip = null;
               const itemList = equipmentInfo?.item_equipment ?? [];
               const target = normalizeSlot(cell.slot);
@@ -108,6 +108,18 @@ const EquipmentModal = ({ isOpen, onClose, equipmentInfo, equipmentError, retryE
                 equip = matchingEquipments[cell.slotIndex - 1];
               } else {
                 equip = matchingEquipments[0] || null;
+              }
+
+              // 안드로이드 슬롯: 일반 장비 API에 없을 때 android-equipment API 결과로 표시
+              if (!equip && cell.slot === '안드로이드' && androidInfo && typeof androidInfo === 'object') {
+                const icon = androidInfo.android_icon ?? androidInfo.androidIcon;
+                const name = androidInfo.android_name ?? androidInfo.androidName ?? androidInfo.android_nickname ?? androidInfo.androidNickname ?? '안드로이드';
+                if (icon || name) {
+                  equip = {
+                    item_icon: icon || null,
+                    item_name: name,
+                  };
+                }
               }
 
               const rarityColor = equip ? getRarityColor(equip.potential_option_grade) : null;
