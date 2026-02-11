@@ -1,6 +1,9 @@
-// 표(6행×7열) + 병합 구조: 셀마다 row/col, 필요 시 rowSpan/colSpan
+/**
+ * 장비 목록 모달 그리드 셀 정의 (6행×7열).
+ * type: slot(장비칸), preview(가운데 캐릭터 이미지), empty/mergedEmpty(빈칸).
+ */
 export const equipmentCells = [
-  // --- Left (C1~C2) ---
+  // 왼쪽: 반지, 얼굴/눈/귀장식, 펜던트, 벨트, 포켓
   { type: 'slot', row: 1, col: 1, label: 'Ring I', slot: '반지', slotIndex: 1 },
   { type: 'slot', row: 1, col: 2, label: 'Face', slot: '얼굴장식' },
 
@@ -19,18 +22,15 @@ export const equipmentCells = [
   { type: 'slot', row: 6, col: 1, label: 'Pocket', slot: '포켓아이템' },
   { type: 'empty', row: 6, col: 2 },
 
-  // --- Center preview merged (R1~R4, C3~C4) ---
+  // 가운데: 캐릭터 이미지 영역 (4행×3열 병합)
   { type: 'preview', row: 1, col: 3, rowSpan: 4, colSpan: 3 },
-
-  // --- Under preview row (R5, C3~C5) ---
+  // 무기/보조무기/엠블렘
   { type: 'slot', row: 5, col: 3, label: 'Weapon', slot: '무기' },
   { type: 'slot', row: 5, col: 4, label: 'Sub', slot: '보조무기' },
   { type: 'slot', row: 5, col: 5, label: 'Emblem', slot: '엠블렘' },
-
-  // --- Bottom merged empty area (R6, C3~C5) ---
+  // 하단 빈 영역
   { type: 'mergedEmpty', row: 6, col: 3, rowSpan: 1, colSpan: 3 },
-
-  // --- Right (C6~C7) ---
+  // 오른쪽: 모자~뱃지
   { type: 'slot', row: 1, col: 6, label: 'Hat', slot: '모자' },
   { type: 'slot', row: 1, col: 7, label: 'Cape', slot: '망토' },
 
