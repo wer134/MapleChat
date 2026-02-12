@@ -23,7 +23,7 @@ public class UnionController {
 
     @GetMapping("/union")
     public Union getUnion(@RequestParam String name) {
-        return nexonApiService.getUnion(name);
+        return nexonApiService.getUnionByName(name);
     }
     
     @GetMapping("/union-raider")
