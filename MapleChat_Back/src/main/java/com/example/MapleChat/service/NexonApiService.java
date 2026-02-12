@@ -28,6 +28,10 @@ import com.example.MapleChat.dto.character.CharacterStat;
 import com.example.MapleChat.dto.character.CharacterSymbolEquipment;
 import com.example.MapleChat.dto.character.CharacterVMatrix;
 import com.example.MapleChat.dto.character.RingExhangeSkillEquipment;
+import com.example.MapleChat.dto.union.Union;
+import com.example.MapleChat.dto.union.UnionArtiFact;
+import com.example.MapleChat.dto.union.UnionChampion;
+import com.example.MapleChat.dto.union.UnionRaider;
 
 @Service
 public class NexonApiService {
@@ -314,4 +318,47 @@ public class NexonApiService {
         return getRingExhangeSkillEquipment(getOcid(name));
     }
 
+    public Union getUnion(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/user/union")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(Union.class).block();
+    }
+    public Union getUnionByName(String name) {
+        return getUnion(getOcid(name));
+    }   
+
+    public UnionRaider getUnionRaider(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/user/union-raider")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(UnionRaider.class).block();
+    }
+    public UnionRaider getUnionRaiderByName(String name) {
+        return getUnionRaider(getOcid(name));
+    }
+
+    public UnionArtiFact getUnionArtiFact(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/user/union-artifact")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(UnionArtiFact.class).block();
+    }
+    public UnionArtiFact getArtiFactByName(String name) {
+        return getUnionArtiFact(getOcid(name));
+    }
+
+    public UnionChampion getChampion(String ocid) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/user/union-champion")
+                .queryParam("ocid", ocid)
+                .build()).retrieve().bodyToMono(UnionChampion.class).block();
+    }
+    public UnionChampion getChampionByName(String name) {
+        return getChampion(getOcid(name));
+    }
 }
