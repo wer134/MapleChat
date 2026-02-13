@@ -1,4 +1,4 @@
-/** 월드명 → 캐릭터 헤더용 월드 아이콘 이미지 */
+// 월드 아이콘 (캐릭터 헤더용)
 import 노바 from '../worldicon/노바.png';
 import 레드 from '../worldicon/레드.png';
 import 루나 from '../worldicon/루나.png';

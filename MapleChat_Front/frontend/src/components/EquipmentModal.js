@@ -1,4 +1,4 @@
-/** 장비 목록 모달: 그리드로 장비 슬롯·캐릭터 이미지 표시, 슬롯 호버/클릭 시 툴팁 연동 */
+// 장비 목록 모달 (그리드·툴팁 연동)
 import React from 'react';
 import { equipmentCells } from '../constants/equipmentSlots';
 import { getRarityColor } from '../utils/gameLogic';
@@ -10,7 +10,6 @@ const normalizeSlot = (s) =>
     .replace(/[()_-]/g, '')
     .trim();
 
-/** 장비 아이템이 이미지/능력치/이름 중 하나라도 없으면 true → "다시 불러오기" 배너 표시 */
 const isEquipmentIncomplete = (equip) => {
   if (!equip) return false;
   const hasIcon = !!equip.item_icon;
@@ -110,7 +109,6 @@ const EquipmentModal = ({ isOpen, onClose, equipmentInfo, equipmentError, retryE
                 equip = matchingEquipments[0] || null;
               }
 
-              // 안드로이드 슬롯: 일반 장비 API에 없을 때 android-equipment API 결과로 표시
               if (!equip && cell.slot === '안드로이드' && androidInfo && typeof androidInfo === 'object') {
                 const icon = androidInfo.android_icon ?? androidInfo.androidIcon;
                 const name = androidInfo.android_name ?? androidInfo.androidName ?? androidInfo.android_nickname ?? androidInfo.androidNickname ?? '안드로이드';

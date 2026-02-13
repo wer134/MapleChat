@@ -1,3 +1,4 @@
+// App 기본 렌더 테스트
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
