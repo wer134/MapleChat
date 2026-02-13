@@ -1,4 +1,4 @@
-/** 스탯 상세 모달: 스탯/하이퍼스탯/어빌리티/성향 탭으로 표시 */
+// 스탯 상세 모달 (스탯/하이퍼/어빌리티/성향)
 import React from 'react';
 import { formatStatValue } from '../utils/formatters';
 

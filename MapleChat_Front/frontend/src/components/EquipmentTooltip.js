@@ -1,4 +1,4 @@
-/** 장비 슬롯 호버/클릭 시 뜨는 상세 툴팁 (이름, 아이콘, 스탯, 잠재/에디/소울 등) */
+// 장비 슬롯 툴팁 (이름·옵션·잠재 등)
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { formatExpireDate } from '../utils/formatters';
 import { getJobCategory, getMaxStarforce, getRarityColor, getRarityInitial } from '../utils/gameLogic';
@@ -57,7 +57,6 @@ const EquipmentTooltip = ({ equipment, position, isPinned, onClose, characterCla
       allStars.push('grey');
     }
 
-    // 스타포스 별 5개씩 묶어 한 줄에 3묶음까지 표시
     const starGroups = [];
     for (let i = 0; i < allStars.length; i += 5) {
       starGroups.push(allStars.slice(i, i + 5));

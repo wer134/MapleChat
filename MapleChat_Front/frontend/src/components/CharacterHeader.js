@@ -1,8 +1,8 @@
-/** 검색 결과 상단: 캐릭터 아바타·이름·레벨·직업·월드 + 스탯/장비 모달 열기 버튼 */
+// 검색 결과 상단: 아바타·이름·레벨·직업·월드·액션 버튼
 import React from 'react';
 import { getWorldIcon } from '../utils/worldIcons';
 
-const CharacterHeader = ({ characterInfo, onOpenStat, onOpenEquipment }) => {
+const CharacterHeader = ({ characterInfo, onOpenStat, onOpenEquipment, onOpenUnion }) => {
   return (
     <>
       <div className="character-header">
@@ -46,6 +46,7 @@ const CharacterHeader = ({ characterInfo, onOpenStat, onOpenEquipment }) => {
       <div className="action-buttons">
         <button className="action-btn" onClick={onOpenStat}>스탯 정보</button>
         <button className="action-btn" onClick={onOpenEquipment}>장비 정보</button>
+        <button className="action-btn" onClick={onOpenUnion}>유니온 정보</button>
       </div>
     </>
   );

@@ -1,0 +1,459 @@
+/* 유니온 지도 뷰어 스타일 */
+.union-map-viewer {
+  position: fixed;
+  inset: 0;
+  background: #f8f9fa;
+  color: #212529;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.union-map-viewer.dark {
+  background: #1a1d21;
+  color: #e9ecef;
+}
+
+.union-viewer-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #dee2e6;
+  background: #fff;
+  color: #495057;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 4px;
+}
+.union-map-viewer.dark .union-viewer-close {
+  background: #2d3238;
+  border-color: #495057;
+  color: #e9ecef;
+}
+
+.union-viewer-loading,
+.union-viewer-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  padding: 24px;
+}
+.union-viewer-error button {
+  padding: 8px 16px;
+  border: 1px solid #0d6efd;
+  background: #0d6efd;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.union-viewer-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 260px 1fr 240px;
+  gap: 0;
+  min-height: 0;
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+.union-map-viewer.dark .union-viewer-layout {
+  border-color: #343a40;
+}
+
+.union-viewer-left {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 12px;
+  background: #fff;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.union-map-viewer.dark .union-viewer-left {
+  background: #25282c;
+  border-color: #343a40;
+}
+
+.union-viewer-left h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 6px;
+}
+.union-map-viewer.dark .union-viewer-left h3 {
+  border-color: #343a40;
+}
+
+.union-viewer-summary {
+  flex-shrink: 0;
+}
+.union-viewer-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 11px;
+}
+.union-viewer-summary-row strong {
+  font-weight: 600;
+}
+.union-viewer-time {
+  font-size: 10px;
+  color: #6c757d;
+}
+.union-map-viewer.dark .union-viewer-time {
+  color: #adb5bd;
+}
+
+.union-viewer-stats ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.union-viewer-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 11px;
+}
+.union-viewer-stat-label {
+  flex: 1;
+  min-width: 0;
+}
+.union-viewer-stat-badge {
+  display: inline-block;
+  min-width: 24px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #e9ecef;
+  color: #495057;
+  text-align: center;
+  font-size: 11px;
+}
+.union-map-viewer.dark .union-viewer-stat-badge {
+  background: #343a40;
+  color: #e9ecef;
+}
+
+.union-viewer-char-section {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.union-viewer-table-wrap {
+  flex: 1;
+  overflow: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+.union-map-viewer.dark .union-viewer-table-wrap {
+  border-color: #343a40;
+}
+
+.union-viewer-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.union-viewer-table th,
+.union-viewer-table td {
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+.union-map-viewer.dark .union-viewer-table th,
+.union-map-viewer.dark .union-viewer-table td {
+  border-color: #343a40;
+}
+.union-viewer-table th {
+  background: #f1f3f5;
+  font-weight: 600;
+}
+.union-map-viewer.dark .union-viewer-table th {
+  background: #2d3238;
+}
+.union-viewer-table tbody tr.highlight {
+  background: rgba(13, 110, 253, 0.15);
+}
+.union-viewer-table tbody tr.selected-from-list {
+  background: rgba(25, 135, 84, 0.2);
+}
+.union-viewer-table tbody tr {
+  cursor: pointer;
+}
+.union-viewer-table tbody tr:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+.union-viewer-table tbody tr.selected-from-list:hover {
+  background: rgba(25, 135, 84, 0.25);
+}
+.union-viewer-table .rank-badge {
+  display: inline-block;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.union-viewer-table .rank-B { background: #9e9e9e; color: #fff; }
+.union-viewer-table .rank-A { background: #4caf50; color: #fff; }
+.union-viewer-table .rank-S { background: #2196f3; color: #fff; }
+.union-viewer-table .rank-SS { background: #9c27b0; color: #fff; }
+.union-viewer-table .rank-SSS { background: #ffc107; color: #000; }
+
+/* (B) 중앙 그리드 */
+.union-viewer-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 12px;
+  position: relative;
+}
+
+.union-viewer-empty-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.06);
+  color: #6c757d;
+  font-size: 13px;
+  border-radius: 6px;
+  pointer-events: none;
+}
+.union-map-viewer.dark .union-viewer-empty-overlay {
+  background: rgba(255, 255, 255, 0.08);
+  color: #adb5bd;
+}
+
+.union-viewer-grid-wrap {
+  --cols: 20;
+  --rows: 20;
+  --tile: 18px;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.union-viewer-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), var(--tile));
+  grid-template-rows: repeat(var(--rows), var(--tile));
+  border: 2px solid #495057;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 0 0 1px #adb5bd;
+}
+.union-map-viewer.dark .union-viewer-grid {
+  background: #25282c;
+  border-color: #495057;
+  box-shadow: 0 0 0 1px #343a40;
+}
+
+.union-viewer-cell {
+  width: var(--tile);
+  height: var(--tile);
+  box-sizing: border-box;
+  border: 1px solid #dee2e6;
+  position: relative;
+  background: #f8f9fa;
+}
+.union-map-viewer.dark .union-viewer-cell {
+  border-color: #343a40;
+  background: #1e2125;
+}
+
+.union-viewer-cell.cross-h {
+  border-top-width: 2px;
+  border-bottom-width: 2px;
+  border-color: #495057;
+  background: #f1f3f5;
+}
+.union-map-viewer.dark .union-viewer-cell.cross-h {
+  border-color: #6c757d;
+  background: #2d3238;
+}
+.union-viewer-cell.cross-v {
+  border-left-width: 2px;
+  border-right-width: 2px;
+  border-color: #495057;
+  background: #f1f3f5;
+}
+.union-map-viewer.dark .union-viewer-cell.cross-v {
+  border-color: #6c757d;
+  background: #2d3238;
+}
+.union-viewer-cell.cross-h.cross-v {
+  background: #e9ecef;
+}
+.union-map-viewer.dark .union-viewer-cell.cross-h.cross-v {
+  background: #25282c;
+}
+
+.union-viewer-block-cell {
+  position: absolute;
+  inset: 1px;
+  border-radius: 2px;
+  border: solid rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.union-viewer-block-cell.hover {
+  filter: brightness(1.1);
+}
+.union-viewer-block-cell.selected {
+  box-shadow: 0 0 0 2px #0d6efd;
+  z-index: 2;
+}
+.union-viewer-block-cell.highlight-from-list {
+  box-shadow: 0 0 0 2px #198754;
+  z-index: 2;
+}
+.union-viewer-block-cell.selected.highlight-from-list {
+  box-shadow: 0 0 0 2px #0d6efd, 0 0 0 4px #198754;
+}
+
+.union-viewer-tooltip {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #fff;
+  font-size: 11px;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.union-viewer-right {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 12px;
+  background: #fff;
+  overflow-y: auto;
+}
+.union-map-viewer.dark .union-viewer-right {
+  background: #25282c;
+  border-color: #343a40;
+}
+
+.union-viewer-right h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 6px;
+}
+.union-map-viewer.dark .union-viewer-right h3 {
+  border-color: #343a40;
+}
+
+.union-viewer-desc ol {
+  margin: 0 0 16px;
+  padding-left: 18px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #495057;
+}
+.union-map-viewer.dark .union-viewer-desc ol {
+  color: #adb5bd;
+}
+
+.union-viewer-filter-group {
+  margin-bottom: 12px;
+}
+.union-viewer-filter-group > span {
+  display: block;
+  font-size: 11px;
+  color: #6c757d;
+  margin-bottom: 4px;
+}
+.union-viewer-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.union-viewer-check input {
+  width: 14px;
+  height: 14px;
+  accent-color: #0d6efd;
+}
+.union-viewer-search {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+.union-map-viewer.dark .union-viewer-search {
+  background: #1e2125;
+  border-color: #343a40;
+  color: #e9ecef;
+}
+
+.union-viewer-toggles {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.union-viewer-footer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 10px 16px;
+  border-top: 1px solid #dee2e6;
+  background: #fff;
+  font-size: 11px;
+  color: #6c757d;
+}
+.union-map-viewer.dark .union-viewer-footer {
+  background: #25282c;
+  border-color: #343a40;
+  color: #adb5bd;
+}
+
+.union-viewer-refresh,
+.union-viewer-reset-filters {
+  padding: 6px 14px;
+  border: 1px solid #0d6efd;
+  background: #0d6efd;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.union-viewer-refresh:hover,
+.union-viewer-reset-filters:hover {
+  background: #0b5ed7;
+}
+.union-viewer-reset-filters {
+  background: transparent;
+  color: #0d6efd;
+}
+.union-viewer-reset-filters:hover {
+  background: rgba(13, 110, 253, 0.1);
+}

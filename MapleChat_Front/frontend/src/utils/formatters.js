@@ -1,4 +1,4 @@
-/** 날짜·숫자 포맷 (만료일, 한국어 단위 등) - 툴팁·스탯 등에서 사용 */
+// 날짜·숫자 포맷 (툴팁·스탯용)
 export const formatExpireDate = (dateStr) => {
   if (!dateStr || dateStr === 'null' || dateStr === '') return null;
   if (dateStr === 'expired') return '만료됨';
