@@ -33,6 +33,10 @@ export default function UnionMapViewer({ characterName, onClose }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [realtimeOn, setRealtimeOn] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [artifactData, setArtifactData] = useState(null);
+  const [championData, setChampionData] = useState(null);
+  const [artifactChampionLoading, setArtifactChampionLoading] = useState(true);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const fetchData = useCallback(async () => {
     if (!characterName) return;
@@ -58,6 +62,28 @@ export default function UnionMapViewer({ characterName, onClose }) {
     const id = setInterval(fetchData, POLL_INTERVAL_MS);
     return () => clearInterval(id);
   }, [realtimeOn, characterName, fetchData]);
+
+  const fetchArtifactChampion = useCallback(() => {
+    if (!characterName) return;
+    setArtifactChampionLoading(true);
+    const name = encodeURIComponent(characterName);
+    Promise.all([
+      fetch(`/union/union-artifact?name=${name}`).then((r) => (r.ok ? r.json() : null)),
+      fetch(`/union/union-champion?name=${name}`).then((r) => (r.ok ? r.json() : null)),
+    ]).then(([artifact, champion]) => {
+      setArtifactData(artifact);
+      setChampionData(champion);
+      setArtifactChampionLoading(false);
+    });
+  }, [characterName]);
+
+  useEffect(() => {
+    if (!characterName) {
+      setArtifactChampionLoading(false);
+      return;
+    }
+    fetchArtifactChampion();
+  }, [characterName, fetchArtifactChampion]);
 
   const gridSize = useMemo(
     () => ({
@@ -177,12 +203,111 @@ export default function UnionMapViewer({ characterName, onClose }) {
 
   const empty = !payload?.blocks?.length && !payload?.characters?.length;
 
+  const detailCards = (
+      <div className="union-viewer-detail-cards">
+        <div className="union-viewer-extra-card">
+          <h3>크리스탈</h3>
+          {artifactChampionLoading ? (
+            <p className="union-viewer-extra-muted">불러오는 중...</p>
+          ) : !artifactData ? (
+            <p className="union-viewer-extra-muted">데이터 없음 <button type="button" className="union-viewer-detail-retry-inline" onClick={fetchArtifactChampion}>다시 불러오기</button></p>
+          ) : (() => {
+            const crystals = artifactData.union_artifact_crystal ?? artifactData.unionArtifactCrystal ?? [];
+            if (crystals.length === 0) return <p className="union-viewer-extra-muted">없음</p>;
+            return (
+              <div className="union-viewer-artifact-crystals">
+                {crystals.map((c, i) => (
+                  <div key={i} className="union-viewer-crystal-item">
+                    <span className="union-viewer-crystal-name">{c.name ?? '-'}</span>
+                    <span>Lv.{c.level ?? 0}</span>
+                    {(c.crystal_option_name_1 ?? c.cryStalOptionName1) && (
+                      <span className="union-viewer-crystal-opt">
+                        {c.crystal_option_name_1 ?? c.cryStalOptionName1}
+                        {(c.crystal_option_name_2 ?? c.cryStalOptionName2) && ` / ${c.crystal_option_name_2 ?? c.cryStalOptionName2}`}
+                        {(c.crystal_option_name_3 ?? c.cryStalOptionName3) && ` / ${c.crystal_option_name_3 ?? c.cryStalOptionName3}`}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+        </div>
+        <div className="union-viewer-extra-card">
+          <h3>스탯증가</h3>
+          {artifactChampionLoading ? (
+            <p className="union-viewer-extra-muted">불러오는 중...</p>
+          ) : !artifactData ? (
+            <p className="union-viewer-extra-muted">데이터 없음 <button type="button" className="union-viewer-detail-retry-inline" onClick={fetchArtifactChampion}>다시 불러오기</button></p>
+          ) : (() => {
+            const effects = artifactData.union_artifact_effect ?? artifactData.unionArtifactEffect ?? [];
+            if (effects.length === 0) return <p className="union-viewer-extra-muted">없음</p>;
+            return (
+              <div className="union-viewer-artifact-effects">
+                {effects.map((eff, i) => (
+                  <span key={i} className="union-viewer-artifact-tag">
+                    {eff.name ?? '-'}: Lv.{eff.level ?? 0}
+                  </span>
+                ))}
+              </div>
+            );
+          })()}
+        </div>
+        <div className="union-viewer-extra-card">
+          <h3>유니온 챔피언</h3>
+          {artifactChampionLoading ? (
+            <p className="union-viewer-extra-muted">불러오는 중...</p>
+          ) : !championData ? (
+            <p className="union-viewer-extra-muted">데이터 없음 <button type="button" className="union-viewer-detail-retry-inline" onClick={fetchArtifactChampion}>다시 불러오기</button></p>
+          ) : (() => {
+            const list = championData.union_champion ?? championData.unionChampion ?? [];
+            if (list.length === 0) return <p className="union-viewer-extra-muted">데이터 없음</p>;
+            return (
+              <div className="union-viewer-champion-list">
+                {list.map((info, i) => (
+                  <div key={i} className="union-viewer-champion-item">
+                    <span className="union-viewer-champion-slot">슬롯 {info.champion_slot ?? info.championSlot ?? '-'}</span>
+                    <span className="union-viewer-champion-name">{info.champion_name ?? info.championName ?? '-'}</span>
+                    <span className="union-viewer-champion-grade">{info.champion_grade ?? info.championGrade ?? '-'}</span>
+                    <span className="union-viewer-champion-class">{info.champion_class ?? info.championClass ?? '-'}</span>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+        </div>
+      </div>
+    );
+
   return (
     <div className={rootClass}>
-      {onClose && (
-        <button type="button" className="union-viewer-close" onClick={onClose}>
-          ×
+      <div className="union-viewer-header-bar">
+        <button type="button" className="union-viewer-detail-btn" onClick={() => setIsDetailOpen(true)}>
+          상세 정보
         </button>
+        {onClose && (
+          <button type="button" className="union-viewer-close" onClick={onClose}>
+            ×
+          </button>
+        )}
+      </div>
+      {isDetailOpen && (
+        <div className="union-viewer-detail-overlay" onClick={() => setIsDetailOpen(false)}>
+          <div className="union-viewer-detail-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="union-viewer-detail-modal-header">
+              <h2>유니온 상세 정보</h2>
+              <div className="union-viewer-detail-header-actions">
+                {!artifactChampionLoading && (!artifactData || !championData) && (
+                  <button type="button" className="union-viewer-detail-retry" onClick={fetchArtifactChampion}>
+                    다시 불러오기
+                  </button>
+                )}
+                <button type="button" className="union-viewer-detail-close" onClick={() => setIsDetailOpen(false)}>×</button>
+              </div>
+            </div>
+            {detailCards}
+          </div>
+        </div>
       )}
 
       <div className="union-viewer-layout">
@@ -267,9 +392,10 @@ export default function UnionMapViewer({ characterName, onClose }) {
           </div>
         </aside>
 
-        {/* (B) 중앙 그리드 뷰어 */}
+        {/* (B) 중앙: 배치도 + 그 아래 아티팩트/챔피언 */}
         <main className="union-viewer-center">
-          <div
+          <div className="union-viewer-center-grid-area">
+            <div
               className="union-viewer-grid-wrap"
               style={{
                 '--cols': gridSize.width,
@@ -281,8 +407,14 @@ export default function UnionMapViewer({ characterName, onClose }) {
                 {Array.from({ length: gridSize.width * gridSize.height }, (_, i) => {
                   const gx = i % gridSize.width;
                   const gy = Math.floor(i / gridSize.width);
-                  const isCrossH = gy === Math.floor(gridSize.height / 2);
-                  const isCrossV = gx === Math.floor(gridSize.width / 2);
+                  const cx = Math.floor(gridSize.width / 2);
+                  const cy = Math.floor(gridSize.height / 2);
+                  const isCrossH = gy === cy;
+                  const isCrossV = gx === cx;
+                  const stairRight = (gx >= cx && gy >= cy && gx - cx === gy - cy) || (gx >= cx && gy <= cy && gx - cx === cy - gy);
+                  const stairLeft = (gx <= cx && gy >= cy && cx - gx === gy - cy) || (gx <= cx && gy <= cy && cx - gx === cy - gy);
+                  const stairBottom = (gx > cx && gy >= cy && gx - cx === gy - cy + 1) || (gx < cx && gy >= cy && cx - gx === gy - cy + 1);
+                  const stairTop = (gx < cx && gy < cy && cx - gx === cy - gy + 1) || (gx > cx && gy < cy && gx - cx === cy - gy + 1);
                   let blockCell = null;
                   blocksWithCells.forEach((b) => {
                     b.renderedCells.forEach((c) => {
@@ -294,7 +426,7 @@ export default function UnionMapViewer({ characterName, onClose }) {
                   return (
                     <div
                       key={i}
-                      className={`union-viewer-cell ${isCrossH ? 'cross-h' : ''} ${isCrossV ? 'cross-v' : ''}`}
+                      className={`union-viewer-cell ${isCrossH ? 'cross-h' : ''} ${isCrossV ? 'cross-v' : ''} ${stairRight ? 'stair-right' : ''} ${stairLeft ? 'stair-left' : ''} ${stairTop ? 'stair-top' : ''} ${stairBottom ? 'stair-bottom' : ''}`}
                       data-x={gx}
                       data-y={gy}
                     >
@@ -316,24 +448,25 @@ export default function UnionMapViewer({ characterName, onClose }) {
                 })}
               </div>
             </div>
-          {empty && (
-            <div className="union-viewer-empty-overlay">배치된 블록이 없습니다.</div>
-          )}
-          {hoverBlockId && (
-            <div className="union-viewer-tooltip">
-              {(() => {
-                const b = payload?.blocks?.find((x) => x.id === hoverBlockId);
-                if (!b) return null;
-                const chars = (payload?.characters ?? []).filter((c) => b.characterIds?.includes(c.id));
-                return (
-                  <>
-                    <div>{JOB_GROUP_LABELS[b.jobGroup]} / {b.rank}</div>
-                    <div>포함: {chars.length}명 {chars[0]?.name}</div>
-                  </>
-                );
-              })()}
-            </div>
-          )}
+            {empty && (
+              <div className="union-viewer-empty-overlay">배치된 블록이 없습니다.</div>
+            )}
+            {hoverBlockId && (
+              <div className="union-viewer-tooltip">
+                {(() => {
+                  const b = payload?.blocks?.find((x) => x.id === hoverBlockId);
+                  if (!b) return null;
+                  const chars = (payload?.characters ?? []).filter((c) => b.characterIds?.includes(c.id));
+                  return (
+                    <>
+                      <div>{JOB_GROUP_LABELS[b.jobGroup]} / {b.rank}</div>
+                      <div>포함: {chars.length}명 {chars[0]?.name}</div>
+                    </>
+                  );
+                })()}
+              </div>
+            )}
+          </div>
         </main>
 
         {/* (C) 우측 패널 */}
@@ -409,7 +542,6 @@ export default function UnionMapViewer({ characterName, onClose }) {
         </aside>
       </div>
 
-      {/* (D) 하단 상태바 */}
       <footer className="union-viewer-footer">
         <span>배치된 블록 수: {payload?.blocks?.length ?? 0}</span>
         <span>차지한 칸 수: {totalCells}</span>
