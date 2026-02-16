@@ -37,6 +37,130 @@
   color: #e9ecef;
 }
 
+.union-viewer-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid #dee2e6;
+  background: #fff;
+  flex-shrink: 0;
+}
+.union-map-viewer.dark .union-viewer-header-bar {
+  background: #25282c;
+  border-color: #343a40;
+}
+.union-viewer-header-bar .union-viewer-close {
+  position: static;
+}
+.union-viewer-detail-btn {
+  padding: 6px 14px;
+  font-size: 12px;
+  border: 1px solid #0d6efd;
+  background: #0d6efd;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.union-viewer-detail-btn:hover {
+  background: #0b5ed7;
+  border-color: #0a58ca;
+}
+
+.union-viewer-detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 20px;
+}
+.union-viewer-detail-modal {
+  background: #f8f9fa;
+  color: #212529;
+  border-radius: 8px;
+  max-width: 920px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+.union-map-viewer.dark .union-viewer-detail-modal {
+  background: #1a1d21;
+  color: #e9ecef;
+}
+.union-viewer-detail-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #dee2e6;
+}
+.union-map-viewer.dark .union-viewer-detail-modal-header {
+  border-color: #343a40;
+}
+.union-viewer-detail-modal-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.union-viewer-detail-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.union-viewer-detail-retry {
+  padding: 6px 12px;
+  font-size: 12px;
+  border: 1px solid #0d6efd;
+  background: #0d6efd;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.union-viewer-detail-retry:hover {
+  background: #0b5ed7;
+  border-color: #0a58ca;
+}
+.union-viewer-detail-retry-inline {
+  margin-left: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  border: 1px solid #0d6efd;
+  background: transparent;
+  color: #0d6efd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.union-viewer-detail-retry-inline:hover {
+  background: #0d6efd;
+  color: #fff;
+}
+.union-viewer-detail-close {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #dee2e6;
+  background: #fff;
+  color: #495057;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.union-map-viewer.dark .union-viewer-detail-close {
+  background: #2d3238;
+  border-color: #495057;
+  color: #e9ecef;
+}
+.union-viewer-detail-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  padding: 16px;
+}
+
 .union-viewer-loading,
 .union-viewer-error {
   display: flex;
@@ -217,11 +341,30 @@
 /* (B) 중앙 그리드 */
 .union-viewer-center {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   min-width: 0;
   padding: 12px;
   position: relative;
+  gap: 12px;
+}
+
+.union-viewer-center-grid-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  position: relative;
+}
+
+.union-viewer-center-extra {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 900px;
 }
 
 .union-viewer-empty-overlay {
@@ -278,23 +421,23 @@
 }
 
 .union-viewer-cell.cross-h {
-  border-top-width: 2px;
-  border-bottom-width: 2px;
-  border-color: #495057;
-  background: #f1f3f5;
+  border-color: #dee2e6;
+  border-top: 2px solid #0f0f0f;
+  background: #f8f9fa;
 }
 .union-map-viewer.dark .union-viewer-cell.cross-h {
-  border-color: #6c757d;
+  border-color: #343a40;
+  border-top: 2px solid #0f0f0f;
   background: #2d3238;
 }
 .union-viewer-cell.cross-v {
-  border-left-width: 2px;
-  border-right-width: 2px;
-  border-color: #495057;
-  background: #f1f3f5;
+  border-color: #dee2e6;
+  border-left: 2px solid #0f0f0f;
+  background: #f8f9fa;
 }
 .union-map-viewer.dark .union-viewer-cell.cross-v {
-  border-color: #6c757d;
+  border-color: #343a40;
+  border-left: 2px solid #0f0f0f;
   background: #2d3238;
 }
 .union-viewer-cell.cross-h.cross-v {
@@ -303,6 +446,24 @@
 .union-map-viewer.dark .union-viewer-cell.cross-h.cross-v {
   background: #25282c;
 }
+
+/* 계단 경계선 (1칸 가로→1칸 세로 반복, 중심 기준 4사분면 대칭) */
+.union-viewer-cell.stair-right {
+  border-right: 2px solid #495057;
+}
+.union-viewer-cell.stair-left {
+  border-left: 2px solid #495057;
+}
+.union-viewer-cell.stair-top {
+  border-top: 2px solid #495057;
+}
+.union-viewer-cell.stair-bottom {
+  border-bottom: 2px solid #495057;
+}
+.union-map-viewer.dark .union-viewer-cell.stair-right { border-right-color: #6c757d; }
+.union-map-viewer.dark .union-viewer-cell.stair-left { border-left-color: #6c757d; }
+.union-map-viewer.dark .union-viewer-cell.stair-top { border-top-color: #6c757d; }
+.union-map-viewer.dark .union-viewer-cell.stair-bottom { border-bottom-color: #6c757d; }
 
 .union-viewer-block-cell {
   position: absolute;
@@ -416,6 +577,116 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.union-viewer-extra-card {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 11px;
+}
+.union-map-viewer.dark .union-viewer-extra-card {
+  background: #25282c;
+  border-color: #343a40;
+}
+
+.union-viewer-extra-card h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 6px;
+}
+.union-map-viewer.dark .union-viewer-extra-card h3 {
+  border-color: #343a40;
+}
+
+.union-viewer-extra-muted {
+  margin: 0;
+  color: #6c757d;
+  font-size: 11px;
+}
+.union-map-viewer.dark .union-viewer-extra-muted {
+  color: #adb5bd;
+}
+
+.union-viewer-artifact-effects {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 0;
+}
+.union-viewer-artifact-tag {
+  padding: 2px 8px;
+  background: #e7f1ff;
+  color: #0d6efd;
+  border-radius: 4px;
+}
+.union-map-viewer.dark .union-viewer-artifact-tag {
+  background: #1e3a5f;
+  color: #7eb8ff;
+}
+
+.union-viewer-artifact-crystals {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.union-viewer-crystal-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.union-viewer-crystal-name {
+  font-weight: 600;
+}
+.union-viewer-crystal-opt {
+  color: #495057;
+  font-size: 10px;
+}
+.union-map-viewer.dark .union-viewer-crystal-opt {
+  color: #adb5bd;
+}
+
+.union-viewer-champion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.union-viewer-champion-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+  border-bottom: 1px solid #eee;
+}
+.union-map-viewer.dark .union-viewer-champion-item {
+  border-color: #343a40;
+}
+.union-viewer-champion-slot {
+  flex-shrink: 0;
+  color: #6c757d;
+}
+.union-viewer-champion-name {
+  font-weight: 600;
+  min-width: 80px;
+}
+.union-viewer-champion-grade {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  background: #e9ecef;
+  color: #495057;
+}
+.union-map-viewer.dark .union-viewer-champion-grade {
+  background: #343a40;
+  color: #dee2e6;
+}
+.union-viewer-champion-class {
+  color: #6c757d;
+  font-size: 10px;
 }
 
 .union-viewer-footer {
