@@ -28,6 +28,8 @@ import com.example.MapleChat.dto.character.CharacterStat;
 import com.example.MapleChat.dto.character.CharacterSymbolEquipment;
 import com.example.MapleChat.dto.character.CharacterVMatrix;
 import com.example.MapleChat.dto.character.RingExhangeSkillEquipment;
+import com.example.MapleChat.dto.guild.GuildBasic;
+import com.example.MapleChat.dto.guild.GuildID;
 import com.example.MapleChat.dto.union.Union;
 import com.example.MapleChat.dto.union.UnionArtiFact;
 import com.example.MapleChat.dto.union.UnionChampion;
@@ -361,4 +363,32 @@ public class NexonApiService {
     public UnionChampion getChampionByName(String name) {
         return getChampion(getOcid(name));
     }
+
+    public GuildID getGuildID(String guildName, String worldName) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/guild/id")
+                .queryParam("guild_name", guildName)
+                .queryParam("world_name", worldName)
+                .build()).retrieve().bodyToMono(GuildID.class).block();
+    }
+
+    public GuildBasic getGuildBasic(String guildId) {
+        return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                .path("/maplestory/v1/guild/basic")
+                .queryParam("oguild_id", guildId) 
+                .build()).retrieve().bodyToMono(GuildBasic.class).block();
+    }
+
+    public GuildBasic getGuildBasicByName(String guildName, String worldName) { 
+        GuildID guildId = getGuildID(guildName, worldName);
+
+        if (guildId == null || guildId.getGuildId() == null) {
+            return null;
+        }
+
+        return getGuildBasic(guildId.getGuildId());
+    }
 }
+
