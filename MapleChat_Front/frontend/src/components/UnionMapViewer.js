@@ -141,7 +141,6 @@ export default function UnionMapViewer({ characterName, onClose }) {
     STAT_ROW_LABELS.forEach((label) => { counts[label] = 0; });
     const chars = payload?.characters ?? [];
     chars.forEach((c) => {
-      const jobLabel = JOB_GROUP_LABELS[c.jobGroup];
       const lvl = c.level;
       if (lvl <= 60) counts['Lvl 60'] = (counts['Lvl 60'] || 0) + 1;
       else if (lvl <= 100) counts['Lvl 100'] = (counts['Lvl 100'] || 0) + 1;
