@@ -1,5 +1,5 @@
-// 메인 앱: 캐릭터 검색·검색 결과·모달·유니온 지도
-import React from 'react';
+// 메인 앱: 캐릭터 검색·길드 검색·검색 결과·모달·유니온 지도
+import React, { useState, useCallback } from 'react';
 import './App.css';
 import CharacterHeader from './components/CharacterHeader';
 import StatModal from './components/StatModal';
@@ -7,11 +7,44 @@ import EquipmentModal from './components/EquipmentModal';
 import UnionMapViewer from './components/UnionMapViewer';
 import EquipmentTooltip from './components/EquipmentTooltip';
 import SearchBox from './components/SearchBox';
+import GuildSearchBox from './components/GuildSearchBox';
+import GuildInfoModal from './components/GuildInfoModal';
 import { useSearchHistory } from './hooks/useSearchHistory';
 import { useCharacterData } from './hooks/useCharacterData';
+import { fetchGuildBasic } from './api/guildApi';
 
 function App() {
   const { searchHistory, addToHistory, removeFromHistory } = useSearchHistory();
+  const [guildInfo, setGuildInfo] = useState(null);
+  const [guildError, setGuildError] = useState(false);
+  const [guildLoading, setGuildLoading] = useState(false);
+  const [isGuildModalOpen, setIsGuildModalOpen] = useState(false);
+  const [lastGuildSearch, setLastGuildSearch] = useState({ guildName: '', worldName: '' });
+
+  const handleGuildSearch = useCallback(async (guildName, worldName) => {
+    setGuildLoading(true);
+    setGuildError(false);
+    setGuildInfo(null);
+    try {
+      const data = await fetchGuildBasic(guildName, worldName);
+      setGuildInfo(data);
+      setLastGuildSearch({ guildName, worldName });
+      setIsGuildModalOpen(true);
+    } catch {
+      setGuildError(true);
+      setLastGuildSearch({ guildName, worldName });
+      setIsGuildModalOpen(true);
+    } finally {
+      setGuildLoading(false);
+    }
+  }, []);
+
+  const handleGuildRetry = useCallback(() => {
+    if (lastGuildSearch.guildName && lastGuildSearch.worldName) {
+      handleGuildSearch(lastGuildSearch.guildName, lastGuildSearch.worldName);
+    }
+  }, [lastGuildSearch, handleGuildSearch]);
+
   const {
     characterName,
     setCharacterName,
@@ -58,6 +91,10 @@ function App() {
           onRemoveHistoryItem={removeFromHistory}
         />
 
+        {!characterInfo && (
+          <GuildSearchBox onSearch={handleGuildSearch} loading={guildLoading} />
+        )}
+
         {error && <div className="error">{error}</div>}
 
         {characterInfo && (
@@ -67,6 +104,7 @@ function App() {
               onOpenStat={() => setIsStatModalOpen(true)}
               onOpenEquipment={() => setIsEquipmentModalOpen(true)}
               onOpenUnion={() => setIsUnionViewerOpen(true)}
+              onOpenGuild={handleGuildSearch}
             />
 
             <StatModal
@@ -118,6 +156,14 @@ function App() {
             )}
           </div>
         )}
+
+        <GuildInfoModal
+          isOpen={isGuildModalOpen}
+          onClose={() => setIsGuildModalOpen(false)}
+          guildInfo={guildInfo}
+          guildError={guildError}
+          onRetry={handleGuildRetry}
+        />
       </div>
     </div>
   );
