@@ -6,6 +6,9 @@ import lombok.Data;
 // 성향 정보
 @Data
 public class CharacterPropensity {
+    @JsonProperty("date") 
+    private String data;
+
     @JsonProperty("charisma_level")    
     private Long charismaLevel;
 
