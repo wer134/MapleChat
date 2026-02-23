@@ -3,7 +3,7 @@ import React from 'react';
 import { getWorldIcon } from '../utils/worldIcons';
 
 const CharacterHeader = ({ characterInfo, onOpenStat, onOpenEquipment, onOpenUnion, onOpenGuild }) => {
-  const guildName = characterInfo.guild_name ?? characterInfo.guildName ?? '';
+  const guildName = characterInfo.character_guild_name ?? characterInfo.guild_name ?? characterInfo.guildName ?? '';
   const worldName = characterInfo.world_name ?? characterInfo.worldName ?? '';
 
   return (
