@@ -11,10 +11,10 @@ const JOB_MAP = {
   메이플M: 'ETC',
 };
 const BLOCK_TYPE_TO_JOB = {
-  히어로: 'WARRIOR', 팔라딘: 'WARRIOR', 다크나이트: 'WARRIOR', 아란: 'WARRIOR', 소울마스터: 'WARRIOR', 미하일: 'WARRIOR', 데몬슬레이어: 'WARRIOR', 데몬어벤저: 'WARRIOR', 카이저: 'WARRIOR', 카인: 'WARRIOR', 제로: 'WARRIOR', 블래스터: 'WARRIOR', 아델: 'WARRIOR', 일리움: 'WARRIOR', 라라: 'WARRIOR', 모험가전사: 'WARRIOR', 전사: 'WARRIOR',
+  히어로: 'WARRIOR', 팔라딘: 'WARRIOR', 다크나이트: 'WARRIOR', 아란: 'WARRIOR', 소울마스터: 'WARRIOR', 미하일: 'WARRIOR', 데몬슬레이어: 'WARRIOR', 데몬어벤저: 'WARRIOR', 카이저: 'WARRIOR', 제로: 'WARRIOR', 블래스터: 'WARRIOR', 아델: 'WARRIOR', 일리움: 'WARRIOR', 라라: 'WARRIOR', 모험가전사: 'WARRIOR', 전사: 'WARRIOR',
   아크메이지: 'MAGE', 비숍: 'MAGE', 플레임위자드: 'MAGE', 배틀메이지: 'MAGE', 루미너스: 'MAGE', 키네시스: 'MAGE', 라이딩: 'MAGE', 모험가마법사: 'MAGE', 마법사: 'MAGE',
-  보우마스터: 'ARCHER', 신궁: 'ARCHER', 패스파인더: 'ARCHER', 윈드브레이커: 'ARCHER', 와일드헌터: 'ARCHER', 메르세데스: 'ARCHER', 카데나: 'ARCHER', 카인: 'ARCHER', 모험가궁수: 'ARCHER', 궁수: 'ARCHER',
-  나이트로드: 'THIEF', 섀도어: 'THIEF', 듀얼블레이더: 'THIEF', 나이트워커: 'THIEF', 제로: 'THIEF', 팬텀: 'THIEF', 카데나: 'THIEF', 호영: 'THIEF', 모험가도적: 'THIEF', 도적: 'THIEF',
+  보우마스터: 'ARCHER', 신궁: 'ARCHER', 패스파인더: 'ARCHER', 윈드브레이커: 'ARCHER', 와일드헌터: 'ARCHER', 메르세데스: 'ARCHER', 카인: 'ARCHER', 모험가궁수: 'ARCHER', 궁수: 'ARCHER',
+  나이트로드: 'THIEF', 섀도어: 'THIEF', 듀얼블레이더: 'THIEF', 나이트워커: 'THIEF', 팬텀: 'THIEF', 카데나: 'THIEF', 호영: 'THIEF', 모험가도적: 'THIEF', 도적: 'THIEF',
   캡틴: 'PIRATE', 바이퍼: 'PIRATE', 캐논마스터: 'PIRATE', 스트라이커: 'PIRATE', 메카닉: 'PIRATE', 은월: 'PIRATE', 엔젤릭버스터: 'PIRATE', 모험가해적: 'PIRATE', 해적: 'PIRATE',
   제논: 'XENON',
   메이플M: 'ETC', 모험가: 'ETC', 기타: 'ETC',
