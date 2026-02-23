@@ -1,5 +1,6 @@
 package com.example.MapleChat.dto.character;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -22,5 +23,6 @@ public class CharacterBasicInfo {
     private String characterImage;
 
     @JsonProperty("guild_name")
+    @JsonAlias("character_guild_name")
     private String guildName;
 }
