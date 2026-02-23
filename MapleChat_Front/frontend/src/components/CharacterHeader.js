@@ -1,8 +1,11 @@
-// 검색 결과 상단: 아바타·이름·레벨·직업·월드·액션 버튼
+// 검색 결과 상단: 아바타·이름·레벨·직업·월드·길드·액션 버튼
 import React from 'react';
 import { getWorldIcon } from '../utils/worldIcons';
 
-const CharacterHeader = ({ characterInfo, onOpenStat, onOpenEquipment, onOpenUnion }) => {
+const CharacterHeader = ({ characterInfo, onOpenStat, onOpenEquipment, onOpenUnion, onOpenGuild }) => {
+  const guildName = characterInfo.guild_name ?? characterInfo.guildName ?? '';
+  const worldName = characterInfo.world_name ?? characterInfo.worldName ?? '';
+
   return (
     <>
       <div className="character-header">
@@ -28,18 +31,24 @@ const CharacterHeader = ({ characterInfo, onOpenStat, onOpenEquipment, onOpenUni
           </div>
           <div className="character-basic">
             <span className="world-name">
-              {getWorldIcon(characterInfo.world_name) && (
+              {getWorldIcon(worldName) && (
                 <img
-                  src={getWorldIcon(characterInfo.world_name)}
-                  alt={characterInfo.world_name}
+                  src={getWorldIcon(worldName)}
+                  alt={worldName}
                   className="world-icon"
                 />
               )}
-              {characterInfo.world_name}
+              {worldName}
             </span>
             <span>LV.{characterInfo.character_level}</span>
             <span>{characterInfo.character_class}</span>
           </div>
+          {guildName && (
+            <div className="character-guild">
+              <span className="character-guild-label">길드</span>
+              <span className="character-guild-name">{guildName}</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -47,6 +56,14 @@ const CharacterHeader = ({ characterInfo, onOpenStat, onOpenEquipment, onOpenUni
         <button className="action-btn" onClick={onOpenStat}>스탯 정보</button>
         <button className="action-btn" onClick={onOpenEquipment}>장비 정보</button>
         <button className="action-btn" onClick={onOpenUnion}>유니온 정보</button>
+        <button
+          className="action-btn"
+          onClick={guildName && onOpenGuild ? () => onOpenGuild(guildName, worldName) : undefined}
+          disabled={!guildName}
+          title={!guildName ? '해당 캐릭터는 길드에 소속되어 있지 않습니다' : '길드 정보 보기'}
+        >
+          길드 정보
+        </button>
       </div>
     </>
   );

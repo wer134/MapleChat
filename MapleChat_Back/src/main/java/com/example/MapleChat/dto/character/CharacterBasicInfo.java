@@ -20,4 +20,7 @@ public class CharacterBasicInfo {
 
     @JsonProperty("character_image")
     private String characterImage;
+
+    @JsonProperty("guild_name")
+    private String guildName;
 }
