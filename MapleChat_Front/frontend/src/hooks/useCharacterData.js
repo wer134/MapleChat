@@ -55,6 +55,11 @@ export function useCharacterData(addToHistory) {
     setHyperStatError(false);
   }, []);
 
+  const goHome = useCallback(() => {
+    clearForNewSearch();
+    setLoading(false);
+  }, [clearForNewSearch]);
+
   const handleSearch = useCallback(
     async (nameOverride) => {
       const searchName = (nameOverride ?? characterName).trim();
@@ -200,6 +205,7 @@ export function useCharacterData(addToHistory) {
     hyperStatInfo,
     hyperStatError,
     handleSearch,
+    goHome,
     retryStat,
     retryHyperStat,
     retryAbility,

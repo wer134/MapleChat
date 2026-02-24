@@ -71,6 +71,7 @@ function App() {
     hyperStatInfo,
     hyperStatError,
     handleSearch,
+    goHome,
     retryStat,
     retryHyperStat,
     retryAbility,
@@ -80,6 +81,9 @@ function App() {
 
   return (
     <div className="App">
+      <button type="button" className="app-home-btn" onClick={goHome} title="홈">
+        🏠
+      </button>
       <div className="container">
         <h1>MapleStory Character information</h1>
         <SearchBox
