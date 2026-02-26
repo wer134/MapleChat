@@ -2,6 +2,21 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## 로컬 설정 (Environment)
+
+클론 후 **`frontend` 폴더에 `.env` 파일을 만들고** 아래 내용을 넣으세요. (`.env`는 Git에 올라가지 않습니다.)
+
+```
+# Dev server: allowedHosts 오류 방지 (일부 환경에서 npm start 시 필요)
+DANGEROUSLY_DISABLE_HOST_CHECK=true
+
+# exe 배포 시 백엔드 주소 (끝에 / 없이). 개발 시 비워두면 proxy(localhost:8080) 사용
+# REACT_APP_API_URL=
+```
+
+- `DANGEROUSLY_DISABLE_HOST_CHECK=true` 없으면 `options.allowedHosts[0] should be a non-empty string` 오류가 날 수 있습니다.
+- exe로 배포할 때만 `REACT_APP_API_URL`에 배포한 백엔드 URL을 넣으면 됩니다.
+
 ## Available Scripts
 
 In the project directory, you can run:
