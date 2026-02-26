@@ -2,6 +2,8 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "main": "electron/main.js",
+  "homepage": ".",
   "proxy": "http://localhost:8080",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
@@ -11,15 +13,33 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
     "sockjs-client": "^1.6.1",
-    "stompjs": "^2.3.3"
+    "stompjs": "^2.3.3",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron:start": "concurrently \"npm run start\" \"wait-on http://localhost:3000 && cross-env ELECTRON_START_URL=http://localhost:3000 electron .\"",
+    "electron:build": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "com.maplechat.app",
+    "productName": "MapleChat",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "build/**/*",
+      "electron/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "npmRebuild": "false",
+    "extends": null
   },
   "eslintConfig": {
     "extends": [
@@ -38,6 +58,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
-  
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^8.0.1"
+  },
+  "description": "MapleStory Character information",
+  "author": "MapleChat"
 }
