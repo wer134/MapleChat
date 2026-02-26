@@ -55,6 +55,7 @@ export function useCharacterData(addToHistory) {
     setHyperStatError(false);
   }, []);
 
+  // eslint-disable-next-line no-unused-vars -- used in return, consumed by App.js
   const goHome = useCallback(() => {
     clearForNewSearch();
     setLoading(false);
