@@ -1,6 +1,6 @@
 // 유니온 지도 뷰어 (3열: 리스트·그리드·필터)
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { getApiBase } from '../api/apiBase';
+import { getApiBase, parseJsonSafe } from '../api/apiBase';
 import { fetchUnionPayload } from '../utils/unionApi';
 import { rotateShape } from '../utils/unionShapes';
 import { JOB_GROUP_LABELS, RANK_ORDER, STAT_ROW_LABELS } from '../types/unionTypes';
@@ -70,8 +70,8 @@ export default function UnionMapViewer({ characterName, onClose }) {
     const name = encodeURIComponent(characterName);
     const base = getApiBase();
     Promise.all([
-      fetch(`${base}/union/union-artifact?name=${name}`).then((r) => (r.ok ? r.json() : null)),
-      fetch(`${base}/union/union-champion?name=${name}`).then((r) => (r.ok ? r.json() : null)),
+      fetch(`${base}/union/union-artifact?name=${name}`).then(parseJsonSafe),
+      fetch(`${base}/union/union-champion?name=${name}`).then(parseJsonSafe),
     ]).then(([artifact, champion]) => {
       setArtifactData(artifact);
       setChampionData(champion);

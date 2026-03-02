@@ -42,7 +42,18 @@ public class NexonApiService {
                 .bodyToMono(clazz)
                 .block();
         } catch (Exception e) {
-            System.out.println("API FAIL → " + path);
+            // 디버깅: 실패한 API 경로
+            StringBuilder params = new StringBuilder();
+            for (int i = 0; i < query.length; i += 2) {
+                if (params.length() > 0) params.append(", ");
+                params.append(query[i]).append("=").append(query[i + 1]);
+            }
+            System.err.println("[Nexon API FAIL] path=" + path + " | params={" + params + "} | responseType=" + clazz.getSimpleName());
+            System.err.println("[Nexon API FAIL] exception=" + e.getClass().getSimpleName() + " | message=" + e.getMessage());
+            if (e.getCause() != null) {
+                System.err.println("[Nexon API FAIL] cause=" + e.getCause().getClass().getSimpleName() + " | " + e.getCause().getMessage());
+            }
+            e.printStackTrace(System.err);
             return null;
         }
     }
