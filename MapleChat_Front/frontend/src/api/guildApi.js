@@ -1,5 +1,5 @@
 // 길드 API (/guild/*)
-import { getApiBase } from './apiBase';
+import { getApiBase, parseJsonSafe } from './apiBase';
 
 export async function fetchGuildBasic(guildName, worldName) {
   const params = new URLSearchParams({
@@ -11,5 +11,7 @@ export async function fetchGuildBasic(guildName, worldName) {
     const msg = await res.text().catch(() => res.statusText);
     throw new Error(msg || '길드 정보를 불러올 수 없습니다.');
   }
-  return res.json();
+  const data = await parseJsonSafe(res);
+  if (data === null) throw new Error('응답 형식 오류');
+  return data;
 }

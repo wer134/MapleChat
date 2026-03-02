@@ -1,6 +1,11 @@
 package com.example.MapleChat.controller;
 
+import java.util.Collections;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.MapleChat.dto.union.Union;
@@ -8,36 +13,39 @@ import com.example.MapleChat.dto.union.UnionArtiFact;
 import com.example.MapleChat.dto.union.UnionChampion;
 import com.example.MapleChat.dto.union.UnionRaider;
 import com.example.MapleChat.service.NexonApiService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/union")
 public class UnionController {
-    private final NexonApiService nexonApiService; 
+    private static final Object EMPTY_JSON = Collections.emptyMap();
+
+    private final NexonApiService nexonApiService;
 
     public UnionController(NexonApiService nexonApiService) {
         this.nexonApiService = nexonApiService;
     }
 
     @GetMapping("/union")
-    public Union getUnion(@RequestParam String name) {
-        return nexonApiService.getUnionByName(name);
+    public ResponseEntity<Object> getUnion(@RequestParam String name) {
+        Union result = nexonApiService.getUnionByName(name);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.ok(EMPTY_JSON);
     }
-    
+
     @GetMapping("/union-raider")
-    public UnionRaider getUnionRaider(@RequestParam String name) {
-        return nexonApiService.getUnionRaiderByName(name);
+    public ResponseEntity<Object> getUnionRaider(@RequestParam String name) {
+        UnionRaider result = nexonApiService.getUnionRaiderByName(name);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.ok(EMPTY_JSON);
     }
 
     @GetMapping("/union-artifact")
-    public UnionArtiFact getUnionArtiFact(@RequestParam String name) {
-        return nexonApiService.getArtiFactByName(name);
+    public ResponseEntity<Object> getUnionArtiFact(@RequestParam String name) {
+        UnionArtiFact result = nexonApiService.getArtiFactByName(name);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.ok(EMPTY_JSON);
     }
 
     @GetMapping("/union-champion")
-    public UnionChampion getChampion(@RequestParam String name) {
-        return nexonApiService.getChampionByName(name);
+    public ResponseEntity<Object> getChampion(@RequestParam String name) {
+        UnionChampion result = nexonApiService.getChampionByName(name);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.ok(EMPTY_JSON);
     }
 }

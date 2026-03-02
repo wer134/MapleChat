@@ -1,13 +1,20 @@
 // 캐릭터 API (/character/*)
-import { getApiBase } from './apiBase';
+import { getApiBase, parseJsonSafe } from './apiBase';
 
 const base = (path, name) =>
-  fetch(`${getApiBase()}${path}?name=${encodeURIComponent(name)}`).then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.statusText))));
+  fetch(`${getApiBase()}${path}?name=${encodeURIComponent(name)}`).then(async (r) => {
+    const data = await parseJsonSafe(r);
+    if (!r.ok) return Promise.reject(new Error(r.statusText));
+    if (data === null) return Promise.reject(new Error('Empty or invalid response'));
+    return data;
+  });
 
 export async function fetchBasic(name) {
   const res = await fetch(`${getApiBase()}/character/basic?name=${encodeURIComponent(name)}`);
   if (!res.ok) throw new Error('Character not found');
-  return res.json();
+  const data = await parseJsonSafe(res);
+  if (data === null) throw new Error('Empty or invalid response');
+  return data;
 }
 
 export async function fetchEquipment(name) {
@@ -16,7 +23,7 @@ export async function fetchEquipment(name) {
 
 export async function fetchAndroidEquipment(name) {
   const res = await fetch(`${getApiBase()}/character/android-equipment?name=${encodeURIComponent(name)}`);
-  return res.ok ? res.json() : null;
+  return parseJsonSafe(res);
 }
 
 export async function fetchAbility(name) {

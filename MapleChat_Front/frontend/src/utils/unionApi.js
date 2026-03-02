@@ -1,5 +1,5 @@
 // 유니온 API 및 Payload 매핑
-import { getApiBase } from '../api/apiBase';
+import { getApiBase, parseJsonSafe } from '../api/apiBase';
 import { SHAPES } from './unionShapes';
 
 const JOB_MAP = {
@@ -170,8 +170,8 @@ export async function fetchUnionPayload(characterName) {
   const base = getApiBase();
   const name = encodeURIComponent(characterName);
   const [unionRes, raiderRes] = await Promise.all([
-    fetch(`${base}/union/union?name=${name}`).then((r) => (r.ok ? r.json() : null)),
-    fetch(`${base}/union/union-raider?name=${name}`).then((r) => (r.ok ? r.json() : null)),
+    fetch(`${base}/union/union?name=${name}`).then(parseJsonSafe),
+    fetch(`${base}/union/union-raider?name=${name}`).then(parseJsonSafe),
   ]);
 
   if (!raiderRes) {
