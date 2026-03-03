@@ -1,5 +1,5 @@
 // 메인 앱: 캐릭터 검색·길드 검색·검색 결과·모달·유니온 지도
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import './App.css';
 import CharacterHeader from './components/CharacterHeader';
 import StatModal from './components/StatModal';
@@ -72,6 +72,8 @@ function App() {
     hyperStatError,
     handleSearch,
     goHome,
+    isBlackWhite,
+    toggleBlackWhite,
     retryStat,
     retryHyperStat,
     retryAbility,
@@ -79,8 +81,18 @@ function App() {
     retryEquipment,
   } = useCharacterData(addToHistory);
 
+  useEffect(() => {
+    const theme = isBlackWhite ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [isBlackWhite]);
+
   return (
     <div className="App">
+      <button type="button" className="app-theme-toggle" onClick={toggleBlackWhite} aria-label="테마 전환">
+        <span className="app-theme-icon">{isBlackWhite ? '☀️' : '🌙'}</span>
+        <span className="app-theme-text">{isBlackWhite ? '라이트 모드' : '다크 모드'}</span>
+      </button>
       <button type="button" className="app-home-btn" onClick={goHome} title="홈">
         🏠
       </button>
@@ -144,6 +156,7 @@ function App() {
               <UnionMapViewer
                 characterName={characterInfo?.character_name}
                 onClose={() => setIsUnionViewerOpen(false)}
+                darkMode={isBlackWhite}
               />
             )}
 

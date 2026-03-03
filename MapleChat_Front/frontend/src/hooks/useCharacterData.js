@@ -23,6 +23,10 @@ export function useCharacterData(addToHistory) {
   const [isStatModalOpen, setIsStatModalOpen] = useState(false);
   const [isEquipmentModalOpen, setIsEquipmentModalOpen] = useState(false);
   const [isUnionViewerOpen, setIsUnionViewerOpen] = useState(false);
+  const [isBlackWhite, setIsBlackWhite] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem('theme') === 'dark';
+  });
 
   const [equipmentInfo, setEquipmentInfo] = useState(null);
   const [equipmentError, setEquipmentError] = useState(false);
@@ -60,6 +64,10 @@ export function useCharacterData(addToHistory) {
     clearForNewSearch();
     setLoading(false);
   }, [clearForNewSearch]);
+
+  const toggleBlackWhite = useCallback(() => {
+    setIsBlackWhite((prev) => !prev);
+  }, []);
 
   const handleSearch = useCallback(
     async (nameOverride) => {
@@ -207,6 +215,8 @@ export function useCharacterData(addToHistory) {
     hyperStatError,
     handleSearch,
     goHome,
+    isBlackWhite,
+    toggleBlackWhite,
     retryStat,
     retryHyperStat,
     retryAbility,

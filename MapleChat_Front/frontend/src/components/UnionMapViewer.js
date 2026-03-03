@@ -1,5 +1,5 @@
 // 유니온 지도 뷰어 (3열: 리스트·그리드·필터)
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { getApiBase, parseJsonSafe } from '../api/apiBase';
 import { fetchUnionPayload } from '../utils/unionApi';
 import { rotateShape } from '../utils/unionShapes';
@@ -22,7 +22,7 @@ const JOB_COLORS = {
 
 const RANK_BORDER = { B: '1px', A: '1px', S: '2px', SS: '2px', SSS: '3px' };
 
-export default function UnionMapViewer({ characterName, onClose }) {
+export default function UnionMapViewer({ characterName, onClose, darkMode: darkModeFromApp }) {
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,11 +33,14 @@ export default function UnionMapViewer({ characterName, onClose }) {
   const [rankFilter, setRankFilter] = useState([]); // ['B', 'A', 'S', ...]
   const [searchQuery, setSearchQuery] = useState('');
   const [realtimeOn, setRealtimeOn] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [localDarkMode, setLocalDarkMode] = useState(false);
+  const darkMode = darkModeFromApp !== undefined ? darkModeFromApp : localDarkMode;
   const [artifactData, setArtifactData] = useState(null);
   const [championData, setChampionData] = useState(null);
   const [artifactChampionLoading, setArtifactChampionLoading] = useState(true);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const gridAreaRef = useRef(null);
+  const [gridScale, setGridScale] = useState(1);
 
   const fetchData = useCallback(async () => {
     if (!characterName) return;
@@ -94,6 +97,28 @@ export default function UnionMapViewer({ characterName, onClose }) {
     }),
     [payload]
   );
+
+  useLayoutEffect(() => {
+    const el = gridAreaRef.current;
+    if (!el || !gridSize.width || !gridSize.height) return;
+    const gridW = TILE_PX * gridSize.width;
+    const gridH = TILE_PX * gridSize.height;
+    const update = () => {
+      const w = el.clientWidth;
+      const h = el.clientHeight;
+      if (w <= 0 || h <= 0) return;
+      const scale = Math.min(1, w / gridW, h / gridH);
+      setGridScale(scale);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    const t = setTimeout(update, 100);
+    return () => {
+      ro.disconnect();
+      clearTimeout(t);
+    };
+  }, [gridSize.width, gridSize.height]);
 
   const blocksWithCells = useMemo(() => {
     if (!payload?.blocks) return [];
@@ -395,15 +420,17 @@ export default function UnionMapViewer({ characterName, onClose }) {
 
         {/* (B) 중앙: 배치도 + 그 아래 아티팩트/챔피언 */}
         <main className="union-viewer-center">
-          <div className="union-viewer-center-grid-area">
+          <div ref={gridAreaRef} className="union-viewer-center-grid-area">
             <div
               className="union-viewer-grid-wrap"
               style={{
                 '--cols': gridSize.width,
                 '--rows': gridSize.height,
                 '--tile': TILE_PX + 'px',
+                '--scale': gridScale,
               }}
             >
+              <div className="union-viewer-grid-wrap-inner">
               <div className="union-viewer-grid">
                 {Array.from({ length: gridSize.width * gridSize.height }, (_, i) => {
                   const gx = i % gridSize.width;
@@ -448,7 +475,7 @@ export default function UnionMapViewer({ characterName, onClose }) {
                   );
                 })}
               </div>
-            </div>
+              </div>
             {empty && (
               <div className="union-viewer-empty-overlay">배치된 블록이 없습니다.</div>
             )}
@@ -467,6 +494,7 @@ export default function UnionMapViewer({ characterName, onClose }) {
                 })()}
               </div>
             )}
+            </div>
           </div>
         </main>
 
@@ -531,14 +559,16 @@ export default function UnionMapViewer({ characterName, onClose }) {
               />
               실시간 보기 (약 45초마다 재조회)
             </label>
-            <label className="union-viewer-check">
-              <input
-                type="checkbox"
-                checked={darkMode}
-                onChange={(e) => setDarkMode(e.target.checked)}
-              />
-              다크모드
-            </label>
+            {darkModeFromApp === undefined && (
+              <label className="union-viewer-check">
+                <input
+                  type="checkbox"
+                  checked={localDarkMode}
+                  onChange={(e) => setLocalDarkMode(e.target.checked)}
+                />
+                다크모드
+              </label>
+            )}
           </div>
         </aside>
       </div>
