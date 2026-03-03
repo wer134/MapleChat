@@ -1,6 +1,10 @@
 /* 메인 앱 레이아웃·검색·모달·툴팁 */
 .App {
   text-align: center;
+  background-color: var(--app-bg);
+  color: var(--app-text);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .app-home-btn {
@@ -9,17 +13,17 @@
   right: 12px;
   padding: 8px 12px;
   font-size: 1.25rem;
-  background: #444;
-  color: #fff;
-  border: 1px solid #666;
+  background: var(--app-btn-bg);
+  color: var(--app-btn-text);
+  border: 1px solid var(--app-btn-border);
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   z-index: 100;
 }
 
 .app-home-btn:hover {
-  background: #555;
+  background: var(--app-btn-hover-bg);
 }
 
 .world-icon {
@@ -43,9 +47,10 @@
 }
 
 .equipment-list h3 {
-  color: #000;
+  color: var(--app-modal-text);
   margin-bottom: 15px;
   font-size: 18px;
+  transition: color 0.3s ease;
 }
 
 .equipment-grid {
@@ -58,13 +63,14 @@
 }
 
 .equipment-cell.preview {
-  border: 1px solid #444;
+  border: 1px solid var(--app-panel-border);
   border-radius: 6px;
-  background: #1f1f1f;
+  background: var(--app-panel-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 .equipment-preview-character {
   width: 100%;
@@ -74,19 +80,20 @@
 }
 
 .equipment-cell.bottom-merged {
-  border: 1px solid #ffffff;
+  border: 1px solid var(--app-modal-bg);
   border-radius: 6px;
-  background: #ffffff;
+  background: var(--app-modal-bg);
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .equipment-item {
   cursor: pointer;
   padding: 0;
-  border: 1px solid #444;
+  border: 1px solid var(--app-panel-border);
   border-radius: 4px;
   text-align: center;
-  background: #2a2a2a;
-  transition: all 0.2s;
+  background: var(--app-panel-bg);
+  transition: all 0.2s ease;
   width: 100%;
   height: 100%;
   min-width: 0;
@@ -98,20 +105,20 @@
 }
 
 .equipment-item:hover {
-  background: #3a3a3a;
-  border-color: var(--hover-color, #666);
+  background: var(--app-btn-hover-bg);
+  border-color: var(--app-btn-border);
   transform: translateY(-2px);
 }
 
 .equipment-item.empty {
-  background: #1a1a1a;
-  border-color: #333;
+  background: var(--app-bg);
+  border-color: var(--app-border);
   cursor: default;
 }
 .equipment-item.empty:hover {
   transform: none;
-  background: #1a1a1a;
-  border-color: #333;
+  background: var(--app-bg);
+  border-color: var(--app-border);
 }
 
 /* 장비 목록 각 슬롯 아이콘: 툴팁과 동일한 테두리·배경·패딩 스타일 */
@@ -122,10 +129,11 @@
   display: block;
   margin: 0;
   box-sizing: border-box;
-  border: 1px solid #555;
+  border: 1px solid var(--app-panel-border);
   border-radius: 5px;
-  background: linear-gradient(to bottom, #2a2a2a, #4a4a4a);
+  background: var(--app-panel-bg);
   padding: 3px;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .equipment-name {
@@ -242,9 +250,10 @@
   margin-left: 5px;
 }
 .stat-breakdown {
-  color: #aaa;
+  color: var(--app-muted-light);
   font-size: 11px;
   margin-left: 5px;
+  transition: color 0.3s ease;
 }
 
 .potential-header {
@@ -256,13 +265,14 @@
 
 .potential-icon {
   display: inline-block;
-  border: 1px solid #000;
+  border: 1px solid var(--app-modal-text);
   border-radius: 3px;
   padding: 0 3px;
   margin-right: 5px;
   font-size: 10px;
   line-height: 1.2;
   font-weight: bold;
+  transition: border-color 0.3s ease;
 }
 
 .potential-option {
@@ -297,8 +307,9 @@
 }
 
 .item-category {
-  color: #888;
+  color: var(--app-muted);
   text-align: left;
+  transition: color 0.3s ease;
 }
 
 .item-job-req, .item-level-req {
@@ -346,8 +357,9 @@
 .character-name {
   font-size: 24px;
   font-weight: bold;
-  color: #000;
+  color: var(--app-text);
   margin-bottom: 10px;
+  transition: color 0.3s ease;
 }
 
 .character-basic {
@@ -362,30 +374,34 @@
   gap: 8px;
   margin-top: 8px;
   padding: 6px 0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--app-border);
+  transition: border-color 0.3s ease;
 }
 .character-guild-label {
   font-size: 12px;
-  color: #666;
+  color: var(--app-muted);
+  transition: color 0.3s ease;
 }
 .character-guild-name {
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: var(--app-text);
+  transition: color 0.3s ease;
 }
 .character-guild-btn {
   margin-left: 4px;
   padding: 4px 10px;
   font-size: 12px;
-  border: 1px solid #0d6efd;
-  background: #0d6efd;
+  border: 1px solid var(--app-primary);
+  background: var(--app-primary);
   color: #fff;
   border-radius: 4px;
   cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 .character-guild-btn:hover {
-  background: #0b5ed7;
-  border-color: #0a58ca;
+  background: var(--app-primary-hover);
+  border-color: var(--app-primary-hover);
 }
 
 .info-sections {
@@ -398,19 +414,21 @@
 }
 
 .info-section {
-  background: #2a2a2a;
-  border: 1px solid #444;
+  background: var(--app-panel-bg);
+  border: 1px solid var(--app-panel-border);
   border-radius: 4px;
   padding: 15px;
   text-align: left;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .info-section h3 {
-  color: #fff;
+  color: var(--app-panel-text);
   margin-bottom: 15px;
   font-size: 16px;
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid var(--app-panel-border);
   padding-bottom: 8px;
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 .stat-grid, .propensity-grid {
@@ -427,12 +445,14 @@
 }
 
 .stat-row .label {
-  color: #aaa;
+  color: var(--app-muted-light);
+  transition: color 0.3s ease;
 }
 
 .stat-row .value {
-  color: #fff;
+  color: var(--app-panel-text);
   font-weight: bold;
+  transition: color 0.3s ease;
 }
 
 .ability-list {
@@ -443,8 +463,9 @@
 
 .ability-row {
   font-size: 12px;
-  color: #fff;
+  color: var(--app-panel-text);
   line-height: 1.4;
+  transition: color 0.3s ease;
 }
 
 .ability-grade {
@@ -467,17 +488,19 @@
 
 .slot-label {
   font-size: 10px;
-  color: #444;
+  color: var(--app-muted);
   user-select: none;
+  transition: color 0.3s ease;
 }
 
 .equipment-slot-fallback {
   font-size: 9px;
-  color: #666;
+  color: var(--app-muted);
   text-align: center;
   padding: 2px;
   word-break: break-all;
   line-height: 1.2;
+  transition: color 0.3s ease;
 }
 
 .action-buttons {
@@ -490,16 +513,16 @@
 .action-btn {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #444;
-  color: #fff;
-  border: 1px solid #666;
+  background-color: var(--app-btn-bg);
+  color: var(--app-btn-text);
+  border: 1px solid var(--app-btn-border);
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .action-btn:hover {
-  background-color: #555;
+  background-color: var(--app-btn-hover-bg);
 }
 
 .modal-overlay {
@@ -516,15 +539,16 @@
 }
 
 .modal-content {
-  background-color: #fff;
+  background-color: var(--app-modal-bg);
   padding: 30px;
   border-radius: 8px;
-  border: 1px solid #444;
+  border: 1px solid var(--app-modal-border);
   max-width: 90%;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  color: #000;
+  color: var(--app-modal-text);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .modal-close {
@@ -533,32 +557,36 @@
   right: 10px;
   background: none;
   border: none;
-  color: #000;
+  color: var(--app-modal-text);
   font-size: 24px;
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .modal-content h2 {
   margin-top: 0;
   margin-bottom: 20px;
-  color: #000;
+  color: var(--app-modal-text);
+  transition: color 0.3s ease;
 }
 
 /* 길드 정보 모달 */
 .guild-info-modal .guild-info-error {
   padding: 16px;
   text-align: center;
-  color: #c00;
+  color: var(--app-error);
+  transition: color 0.3s ease;
 }
 .guild-info-modal .guild-info-error .retry-btn {
   margin-top: 8px;
   padding: 6px 14px;
-  border: 1px solid #0d6efd;
-  background: #0d6efd;
+  border: 1px solid var(--app-primary);
+  background: var(--app-primary);
   color: #fff;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 .guild-info-sections {
   text-align: left;
@@ -570,8 +598,9 @@
   margin: 0 0 10px;
   font-size: 15px;
   padding-bottom: 6px;
-  border-bottom: 1px solid #eee;
-  color: #000;
+  border-bottom: 1px solid var(--app-border);
+  color: var(--app-modal-text);
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 .guild-info-header h3 {
   font-size: 18px;
@@ -580,14 +609,16 @@
 .guild-info-world {
   margin: 4px 0 10px;
   font-size: 13px;
-  color: #555;
+  color: var(--app-muted);
+  transition: color 0.3s ease;
 }
 .guild-info-stats {
   display: flex;
   flex-wrap: wrap;
   gap: 12px 20px;
   font-size: 13px;
-  color: #333;
+  color: var(--app-modal-text);
+  transition: color 0.3s ease;
 }
 .guild-member-list {
   list-style: none;
@@ -599,9 +630,11 @@
 }
 .guild-member-list li {
   padding: 4px 10px;
-  background: #f0f0f0;
+  background: var(--app-card);
   border-radius: 4px;
   font-size: 13px;
+  color: var(--app-text);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 .guild-skill-list {
   list-style: none;
@@ -610,48 +643,53 @@
 }
 .guild-skill-item {
   padding: 8px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--app-border);
   font-size: 13px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   align-items: baseline;
+  transition: border-color 0.3s ease;
 }
 .guild-skill-item:last-child {
   border-bottom: none;
 }
 .guild-skill-name {
   font-weight: 600;
-  color: #000;
+  color: var(--app-modal-text);
+  transition: color 0.3s ease;
 }
 .guild-skill-level {
-  color: #0d6efd;
+  color: var(--app-primary);
+  transition: color 0.3s ease;
 }
 .guild-skill-effect {
   width: 100%;
-  color: #555;
+  color: var(--app-muted);
   font-size: 12px;
+  transition: color 0.3s ease;
 }
 
 .error-message {
-  color: #ff4444;
+  color: var(--app-error);
   padding: 10px;
   text-align: center;
   font-size: 13px;
+  transition: color 0.3s ease;
 }
 
 .retry-btn {
   background: none;
   border: none;
-  color: #888;
+  color: var(--app-muted);
   cursor: pointer;
   font-size: 16px;
   margin-left: 8px;
   padding: 0;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
 }
 .retry-btn:hover {
-  color: #fff;
+  color: var(--app-text);
 }
 
 .equipment-retry-banner {
@@ -662,18 +700,20 @@
   gap: 8px;
   padding: 8px 12px;
   margin-bottom: 12px;
-  background: rgba(255, 180, 0, 0.12);
-  border: 1px solid rgba(255, 180, 0, 0.4);
+  background: var(--app-card);
+  border: 1px solid var(--app-border);
   border-radius: 6px;
-  color: #b8860b;
+  color: var(--app-text);
   font-size: 13px;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 .equipment-retry-banner .retry-btn {
-  color: #c9a227;
+  color: var(--app-primary);
   font-size: 13px;
+  transition: color 0.3s ease;
 }
 .equipment-retry-banner .retry-btn:hover {
-  color: #fff;
+  color: var(--app-primary-hover);
 }
 .equipment-item.empty {
   background: transparent !important;
@@ -701,8 +741,8 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  background: #fff;
-  border: 1px solid #ccc;
+  background: var(--app-history-bg);
+  border: 1px solid var(--app-history-border);
   border-top: none;
   border-radius: 0 0 6px 6px;
   max-height: 120px;
@@ -711,6 +751,7 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   text-align: left;
   box-sizing: border-box;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 .search-history li {
   height: 1.25em;
@@ -718,14 +759,15 @@
   padding: 0 8px;
   box-sizing: border-box;
   cursor: pointer;
-  color: #333;
+  color: var(--app-history-text);
   font-size: 8pt;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--app-history-divider);
   text-align: left;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 4px;
+  transition: background 0.2s ease, color 0.3s ease, border-color 0.3s ease;
 }
 .search-history-text {
   flex: 1;
@@ -740,7 +782,7 @@
   padding: 0;
   border: none;
   background: transparent;
-  color: #666;
+  color: var(--app-muted);
   font-size: 1em;
   line-height: 1;
   cursor: pointer;
@@ -748,16 +790,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.3s ease;
 }
 .search-history-remove:hover {
-  background: rgba(0, 0, 0, 0.08);
-  color: #333;
+  color: var(--app-text);
 }
 .search-history li:last-child {
   border-bottom: none;
 }
 .search-history li:hover {
-  background: #f0f0f0;
+  background: var(--app-history-hover);
 }
 
 /* 캐릭터/길드 검색창 동일 크기 */
@@ -777,27 +819,29 @@
   width: 100%;
   padding: 8px 12px;
   font-size: 14px;
-  border: 1px solid #444;
+  border: 1px solid var(--app-input-border);
   border-radius: 6px;
-  background: #2a2a2a;
-  color: #fff;
+  background: var(--app-input-bg);
+  color: var(--app-input-text);
   box-sizing: border-box;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 .search-box > button,
 .guild-search-btn {
   flex-shrink: 0;
   padding: 8px 18px;
   font-size: 14px;
-  border: 1px solid #0d6efd;
-  background: #0d6efd;
+  border: 1px solid var(--app-primary);
+  background: var(--app-primary);
   color: #fff;
   border-radius: 6px;
   cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 .search-box > button:hover:not(:disabled),
 .guild-search-btn:hover:not(:disabled) {
-  background: #0b5ed7;
-  border-color: #0a58ca;
+  background: var(--app-primary-hover);
+  border-color: var(--app-primary-hover);
 }
 .search-box > button:disabled,
 .guild-search-btn:disabled {
@@ -842,19 +886,20 @@
   width: 120px;
   padding: 8px 8px 8px 10px;
   font-size: 13px;
-  border: 1px solid #444;
+  border: 1px solid var(--app-input-border);
   border-radius: 6px;
-  background: #2a2a2a;
-  color: #fff;
+  background: var(--app-input-bg);
+  color: var(--app-input-text);
   cursor: pointer;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 .guild-search-world-trigger:hover {
-  border-color: #666;
-  background: #333;
+  border-color: var(--app-btn-border);
+  background: var(--app-btn-hover-bg);
 }
 .guild-world-dropdown-arrow {
   font-size: 10px;
@@ -872,29 +917,31 @@
   max-height: calc((1.5em + 10px) * 5);
   overflow-y: auto;
   overflow-x: hidden;
-  border: 1px solid #444;
+  border: 1px solid var(--app-input-border);
   border-radius: 6px;
-  background: #2a2a2a;
-  color: #fff;
+  background: var(--app-input-bg);
+  color: var(--app-input-text);
   z-index: 100;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 .guild-world-dropdown-list li {
   padding: 6px 10px;
   font-size: 13px;
   cursor: pointer;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--app-panel-border);
   line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 .guild-world-dropdown-list li:last-child {
   border-bottom: none;
 }
 .guild-world-dropdown-list li:hover,
 .guild-world-dropdown-list li.selected {
-  background: #0d6efd;
+  background: var(--app-primary);
   color: #fff;
 }
 
@@ -902,25 +949,28 @@
   text-align: left;
 }
 .union-modal h3 {
-  color: #000;
+  color: var(--app-modal-text);
   margin: 0 0 10px;
   font-size: 16px;
+  transition: color 0.3s ease;
 }
 .union-modal .union-section {
   margin-bottom: 20px;
 }
 .union-grid-desc {
-  color: #555;
+  color: var(--app-muted);
   font-size: 12px;
   margin: 0 0 8px;
+  transition: color 0.3s ease;
 }
 .union-placement-grid {
   display: inline-flex;
   flex-direction: column;
   gap: 2px;
-  background: #eee;
+  background: var(--app-card);
   padding: 6px;
   border-radius: 6px;
+  transition: background 0.3s ease;
 }
 .union-grid-row {
   display: flex;
@@ -930,14 +980,15 @@
   width: 52px;
   min-height: 32px;
   padding: 4px 6px;
-  background: #fff;
-  border: 1px solid #ccc;
+  background: var(--app-modal-bg);
+  border: 1px solid var(--app-border);
   border-radius: 4px;
   font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
+  color: var(--app-modal-text);
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 .union-class-tabs {
   display: flex;
@@ -947,36 +998,39 @@
 }
 .union-class-tab {
   padding: 6px 12px;
-  border: 1px solid #444;
-  background: #f5f5f5;
-  color: #333;
+  border: 1px solid var(--app-panel-border);
+  background: var(--app-card);
+  color: var(--app-text);
   border-radius: 6px;
   cursor: pointer;
   font-size: 13px;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 .union-class-tab:hover {
-  background: #e8e8e8;
+  background: var(--app-history-hover);
 }
 .union-class-tab.active {
-  background: #333;
-  color: #fff;
-  border-color: #333;
+  background: var(--app-panel-bg);
+  color: var(--app-panel-text);
+  border-color: var(--app-panel-border);
 }
 .union-block-list {
   min-height: 60px;
 }
 .union-no-blocks {
-  color: #666;
+  color: var(--app-muted);
   font-size: 13px;
   margin: 0;
+  transition: color 0.3s ease;
 }
 .union-block-card {
-  background: #f9f9f9;
-  border: 1px solid #ddd;
+  background: var(--app-card);
+  border: 1px solid var(--app-border);
   border-radius: 6px;
   padding: 10px 12px;
   margin-bottom: 8px;
   font-size: 13px;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 .union-block-row {
   display: flex;
@@ -987,10 +1041,68 @@
   margin-bottom: 0;
 }
 .union-block-row .label {
-  color: #555;
+  color: var(--app-muted);
   min-width: 50px;
+  transition: color 0.3s ease;
 }
 .union-block-row .value {
-  color: #000;
+  color: var(--app-text);
   word-break: break-all;
+  transition: color 0.3s ease;
+}
+.app-theme-toggle {
+  position: fixed;
+  top: 11px;
+  right: 70px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background: var(--app-card);
+  color: var(--app-text);
+  border: 2px solid var(--app-border);
+  border-radius: 50px;
+  cursor: pointer;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+.app-theme-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+[data-theme="dark"] .app-theme-toggle:hover {
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+.app-theme-icon {
+  font-size: 1.2rem;
+}
+.app-theme-text {
+  font-size: 0.95rem;
+}
+
+/* data-theme 기반 흑백 모드 (트랜지션 적용) */
+[data-theme="dark"] .App .container,
+[data-theme="dark"] .App h1,
+[data-theme="dark"] .App .character-info,
+[data-theme="dark"] .App .equipment-list h3,
+[data-theme="dark"] .App .character-info h2,
+[data-theme="dark"] .App .character-info h3 {
+  color: var(--app-text);
+  transition: color 0.3s ease;
+}
+[data-theme="dark"] .App .error {
+  color: var(--app-error);
+  transition: color 0.3s ease;
+}
+[data-theme="dark"] .App .search-box .search-input-wrap input,
+[data-theme="dark"] .App .search-box.guild-search-box .guild-search-input {
+  background: var(--app-input-bg);
+  border-color: var(--app-input-border);
+  color: var(--app-input-text);
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+[data-theme="dark"] .App .equipment-cell.bottom-merged {
+  visibility: hidden;
+  pointer-events: none;
 }
