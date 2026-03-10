@@ -22,7 +22,7 @@ const JOB_COLORS = {
 
 const RANK_BORDER = { B: '1px', A: '1px', S: '2px', SS: '2px', SSS: '3px' };
 
-export default function UnionMapViewer({ characterName, onClose, darkMode: darkModeFromApp }) {
+export default function UnionMapViewer({ characterName, onClose, darkMode: darkModeFromApp, inline = false }) {
   const [payload, setPayload] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -188,6 +188,11 @@ export default function UnionMapViewer({ characterName, onClose, darkMode: darkM
     [blocksWithCells]
   );
 
+  const rankFilterOrder = useMemo(
+    () => ['SSS', 'SS', 'S', 'A', 'B'].filter((r) => RANK_ORDER.includes(r)),
+    []
+  );
+
   const toggleJob = (job) => {
     setJobFilter((prev) =>
       prev.includes(job) ? prev.filter((j) => j !== job) : [...prev, job]
@@ -204,9 +209,22 @@ export default function UnionMapViewer({ characterName, onClose, darkMode: darkM
     setSearchQuery('');
   };
 
-  const rootClass = darkMode ? 'union-map-viewer dark' : 'union-map-viewer';
+  const baseClass = darkMode ? 'union-map-viewer dark' : 'union-map-viewer';
+  const rootClass = inline ? `${baseClass} union-map-viewer--inline` : baseClass;
 
-  if (loading && !payload) {
+  if (inline && loading && !payload) {
+    return (
+      <div className={rootClass}>
+        <div className="union-viewer-inline">
+          <div className="union-viewer-inline-left">
+            <div className="union-viewer-loading">유니온 정보 불러오는 중...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!inline && loading && !payload) {
     return (
       <div className={rootClass}>
         {onClose && <button type="button" className="union-viewer-close" onClick={onClose}>×</button>}
@@ -215,7 +233,22 @@ export default function UnionMapViewer({ characterName, onClose, darkMode: darkM
     );
   }
 
-  if (error && !payload) {
+  if (inline && error && !payload) {
+    return (
+      <div className={rootClass}>
+        <div className="union-viewer-inline">
+          <div className="union-viewer-inline-left">
+            <div className="union-viewer-error">
+              {error}
+              <button type="button" onClick={fetchData}>다시 시도</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!inline && error && !payload) {
     return (
       <div className={rootClass}>
         {onClose && <button type="button" className="union-viewer-close" onClick={onClose}>×</button>}
@@ -304,6 +337,161 @@ export default function UnionMapViewer({ characterName, onClose, darkMode: darkM
         </div>
       </div>
     );
+
+  if (inline) {
+    return (
+      <div className={rootClass}>
+        <div className="union-viewer-inline">
+          <div className="union-viewer-inline-left">
+            <div className="union-viewer-summary">
+              <h3>유니온 요약</h3>
+              <div className="union-viewer-summary-row">
+                <span>유니온 레벨</span>
+                <strong>{payload?.summary?.unionLevel ?? '-'}</strong>
+              </div>
+              <div className="union-viewer-summary-row">
+                <span>총 캐릭터 수</span>
+                <strong>{payload?.summary?.totalCharacters ?? 0}</strong>
+              </div>
+              {payload?.summary?.score != null && (
+                <div className="union-viewer-summary-row">
+                  <span>유니온 점수</span>
+                  <strong>{payload.summary.score}</strong>
+                </div>
+              )}
+            </div>
+
+            <div className="union-viewer-filters">
+              <h3>필터</h3>
+              <div className="union-viewer-filter-group">
+                <span>직업군</span>
+                {Object.keys(JOB_GROUP_LABELS).map((job) => (
+                  <label key={job} className="union-viewer-check">
+                    <input
+                      type="checkbox"
+                      checked={jobFilter.includes(job)}
+                      onChange={() => toggleJob(job)}
+                    />
+                    {JOB_GROUP_LABELS[job]}
+                  </label>
+                ))}
+              </div>
+              <div className="union-viewer-filter-group">
+                <span>등급</span>
+                {rankFilterOrder.map((r) => (
+                  <label key={r} className="union-viewer-check">
+                    <input
+                      type="checkbox"
+                      checked={rankFilter.includes(r)}
+                      onChange={() => toggleRank(r)}
+                    />
+                    {r}
+                  </label>
+                ))}
+              </div>
+              <div className="union-viewer-filter-group">
+                <span>캐릭터명 검색</span>
+                <input
+                  type="text"
+                  className="union-viewer-search"
+                  placeholder="검색..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <div className="union-viewer-toggles">
+                <button type="button" className="union-viewer-reset-filters" onClick={resetFilters}>
+                  필터 초기화
+                </button>
+              </div>
+            </div>
+
+            <div className="union-viewer-char-section union-viewer-char-section--inline">
+              <h3>캐릭터 리스트</h3>
+              <div className="union-viewer-table-wrap">
+                <table className="union-viewer-table">
+                  <thead>
+                    <tr>
+                      <th>직업군</th>
+                      <th>레벨</th>
+                      <th>등급</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCharacters.length === 0 ? (
+                      <tr>
+                        <td colSpan={3}>목록 없음</td>
+                      </tr>
+                    ) : (
+                      filteredCharacters.map((c) => (
+                        <tr key={c.id}>
+                          <td>{c.name ?? '—'}</td>
+                          <td>{c.level}</td>
+                          <td>
+                            <span className={`rank-badge rank-${c.rank}`}>{c.rank}</span>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div className="union-viewer-inline-right">
+            <div ref={gridAreaRef} className="union-viewer-center-grid-area">
+              <div
+                className="union-viewer-grid-wrap"
+                style={{
+                  '--cols': gridSize.width,
+                  '--rows': gridSize.height,
+                  '--tile': TILE_PX + 'px',
+                  '--scale': gridScale,
+                }}
+              >
+                <div className="union-viewer-grid-wrap-inner">
+                  <div className="union-viewer-grid">
+                    {Array.from({ length: gridSize.width * gridSize.height }, (_, i) => {
+                      const gx = i % gridSize.width;
+                      const gy = Math.floor(i / gridSize.width);
+                      let blockCell = null;
+                      blocksWithCells.forEach((b) => {
+                        b.renderedCells.forEach((c) => {
+                          if (b.x + c.x === gx && b.y + c.y === gy) {
+                            blockCell = b;
+                          }
+                        });
+                      });
+                      return (
+                        <div
+                          key={i}
+                          className="union-viewer-cell"
+                          data-x={gx}
+                          data-y={gy}
+                        >
+                          {blockCell && (
+                            <div
+                              className="union-viewer-block-cell"
+                              style={{
+                                background: JOB_COLORS[blockCell.jobGroup] || JOB_COLORS.ETC,
+                                borderWidth: RANK_BORDER[blockCell.rank] || '1px',
+                              }}
+                              title={`${JOB_GROUP_LABELS[blockCell.jobGroup]} / ${blockCell.rank}`}
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={rootClass}>
@@ -528,7 +716,7 @@ export default function UnionMapViewer({ characterName, onClose, darkMode: darkM
             </div>
             <div className="union-viewer-filter-group">
               <span>등급</span>
-              {RANK_ORDER.map((r) => (
+              {rankFilterOrder.map((r) => (
                 <label key={r} className="union-viewer-check">
                   <input
                     type="checkbox"
