@@ -11,6 +11,45 @@
   overflow: hidden;
 }
 
+/* 정보창 안에서 인라인으로 사용할 때는 .union-map-viewer--inline 클래스를 추가해서 오버레이가 되지 않도록 함 */
+.union-map-viewer--inline {
+  position: static;
+  inset: auto;
+  height: auto;
+  z-index: auto;
+  background: transparent;
+}
+
+.union-viewer-inline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.union-viewer-inline-left {
+  width: 100%;
+  max-width: 320px;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+}
+
+.union-viewer-inline-right {
+  flex: 1;
+  min-width: 0;
+  padding: 8px;
+  box-sizing: border-box;
+  margin-top: 40px;
+}
+
+/* 인라인 모드에서 캐릭터 리스트는 최대 5행 정도만 보이도록 높이 제한 */
+.union-viewer-char-section--inline .union-viewer-table-wrap {
+  max-height: 170px;
+  overflow-y: auto;
+}
+
 .union-map-viewer.dark {
   background: #1a1d21;
   color: #e9ecef;
@@ -549,8 +588,13 @@
 
 .union-viewer-filter-group {
   margin-bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 8px;
+  row-gap: 4px;
 }
 .union-viewer-filter-group > span {
+  grid-column: 1 / -1;
   display: block;
   font-size: 11px;
   color: #6c757d;
@@ -560,7 +604,6 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 4px;
   font-size: 11px;
   cursor: pointer;
 }
