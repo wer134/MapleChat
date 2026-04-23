@@ -1,0 +1,18 @@
+# Secrets
+MapleChat_Back/src/main/resources/application.properties
+
+# Maven
+MapleChat_Back/target/
+
+# Frontend
+MapleChat_Front/frontend/node_modules/
+MapleChat_Front/frontend/build/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
