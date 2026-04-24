@@ -138,8 +138,16 @@ export default function UnionMapViewer({ characterName, onClose, darkMode: darkM
       list = list.filter((c) =>
         (c.name || '').toLowerCase().includes(searchQuery.trim().toLowerCase())
       );
-    return [...list].sort((a, b) => (b.level ?? 0) - (a.level ?? 0));
-  }, [payload?.characters, jobFilter, rankFilter, searchQuery]);
+    const selectedIds = selectedBlockId && payload?.blocks
+      ? (payload.blocks.find((b) => b.id === selectedBlockId)?.characterIds ?? [])
+      : [];
+    return [...list].sort((a, b) => {
+      const aSelected = selectedIds.includes(a.id) ? 1 : 0;
+      const bSelected = selectedIds.includes(b.id) ? 1 : 0;
+      if (bSelected !== aSelected) return bSelected - aSelected;
+      return (b.level ?? 0) - (a.level ?? 0);
+    });
+  }, [payload?.characters, payload?.blocks, jobFilter, rankFilter, searchQuery, selectedBlockId]);
 
   const highlightedCharacterIds =
     selectedBlockId && payload?.blocks
@@ -412,7 +420,7 @@ export default function UnionMapViewer({ characterName, onClose, darkMode: darkM
                 <table className="union-viewer-table">
                   <thead>
                     <tr>
-                      <th>직업군</th>
+                      <th>캐릭터명</th>
                       <th>레벨</th>
                       <th>등급</th>
                     </tr>
@@ -472,11 +480,14 @@ export default function UnionMapViewer({ characterName, onClose, darkMode: darkM
                         >
                           {blockCell && (
                             <div
-                              className="union-viewer-block-cell"
+                              className={`union-viewer-block-cell ${selectedBlockId === blockCell.id ? 'selected' : ''} ${blockIdsHighlightedByList.has(blockCell.id) ? 'highlight-from-list' : ''} ${hoverBlockId === blockCell.id ? 'hover' : ''}`}
                               style={{
                                 background: JOB_COLORS[blockCell.jobGroup] || JOB_COLORS.ETC,
                                 borderWidth: RANK_BORDER[blockCell.rank] || '1px',
                               }}
+                              onClick={() => setSelectedBlockId((prev) => prev === blockCell.id ? null : blockCell.id)}
+                              onMouseEnter={() => setHoverBlockId(blockCell.id)}
+                              onMouseLeave={() => setHoverBlockId(null)}
                               title={`${JOB_GROUP_LABELS[blockCell.jobGroup]} / ${blockCell.rank}`}
                             />
                           )}

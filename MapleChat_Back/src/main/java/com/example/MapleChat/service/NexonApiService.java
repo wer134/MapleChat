@@ -4,24 +4,30 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.MapleChat.dto.character.*;
 import com.example.MapleChat.dto.guild.*;
 import com.example.MapleChat.dto.union.*;
+import com.example.MapleChat.exception.NexonApiException;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Service
 public class NexonApiService {
 
     private final WebClient webClient;
     private final Map<String, String> ocidCache = new ConcurrentHashMap<>();
 
-    public NexonApiService(@Value("${nexon.api-key}") String apiKey) {
+    public NexonApiService(
+            @Value("${nexon.api-key}") String apiKey,
+            @Value("${nexon.api-url:https://open.api.nexon.com}") String apiUrl) {
         this.webClient = WebClient.builder()
-                .baseUrl("https://open.api.nexon.com")
+                .baseUrl(apiUrl)
                 .defaultHeader("x-nxopen-api-key", apiKey)
                 .build();
     }
@@ -41,28 +47,30 @@ public class NexonApiService {
                         r -> Mono.error(new RuntimeException("RATE_LIMIT")))
                 .bodyToMono(clazz)
                 .block();
+        } catch (NexonApiException e) {
+            throw e;
         } catch (Exception e) {
-            // 디버깅: 실패한 API 경로
-            StringBuilder params = new StringBuilder();
-            for (int i = 0; i < query.length; i += 2) {
-                if (params.length() > 0) params.append(", ");
-                params.append(query[i]).append("=").append(query[i + 1]);
+            String msg = e.getMessage();
+            if (msg != null && msg.contains("RATE_LIMIT")) {
+                log.warn("넥슨 API 요청 한도 초과: {}", path);
+                throw new NexonApiException("넥슨 API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요.", HttpStatus.TOO_MANY_REQUESTS);
             }
-            System.err.println("[Nexon API FAIL] path=" + path + " | params={" + params + "} | responseType=" + clazz.getSimpleName());
-            System.err.println("[Nexon API FAIL] exception=" + e.getClass().getSimpleName() + " | message=" + e.getMessage());
-            if (e.getCause() != null) {
-                System.err.println("[Nexon API FAIL] cause=" + e.getCause().getClass().getSimpleName() + " | " + e.getCause().getMessage());
-            }
-            e.printStackTrace(System.err);
-            return null;
+            log.error("넥슨 API 호출 실패: {} | {}: {}", path, e.getClass().getSimpleName(), e.getMessage());
+            throw new NexonApiException("넥슨 API 호출에 실패했습니다: " + path, HttpStatus.BAD_GATEWAY);
         }
     }
 
     private String getOcid(String name) {
         return ocidCache.computeIfAbsent(name, n -> {
+            log.info("OCID 조회: {}", n);
             CharacterOcid id = fetch("/maplestory/v1/id", CharacterOcid.class,
                     "character_name", n);
-            return id == null ? null : id.getCharacterOcid();
+            if (id == null || id.getCharacterOcid() == null) {
+                log.warn("캐릭터 없음: {}", n);
+                throw new NexonApiException("캐릭터를 찾을 수 없습니다: " + n, HttpStatus.NOT_FOUND);
+            }
+            log.debug("OCID 캐시 저장: {} -> {}", n, id.getCharacterOcid());
+            return id.getCharacterOcid();
         });
     }
 
