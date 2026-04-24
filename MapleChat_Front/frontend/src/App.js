@@ -1,26 +1,27 @@
 // 메인 앱: 캐릭터 검색·길드 검색·검색 결과·모달·유니온 지도
-import React, { useState, useCallback, useEffect } from 'react';
-import './App.css';
-import CharacterHeader from './components/CharacterHeader';
-import StatModal from './components/StatModal';
-import EquipmentModal from './components/EquipmentModal';
-import UnionMapViewer from './components/UnionMapViewer';
-import EquipmentTooltip from './components/EquipmentTooltip';
-import SearchBox from './components/SearchBox';
-import GuildSearchBox from './components/GuildSearchBox';
-import GuildInfoModal from './components/GuildInfoModal';
-import { equipmentCells } from './constants/equipmentSlots';
-import { useSearchHistory } from './hooks/useSearchHistory';
-import { useCharacterData } from './hooks/useCharacterData';
-import { fetchGuildBasic } from './api/guildApi';
-import { getWorldIcon } from './utils/worldIcons';
-import { formatStatValue } from './utils/formatters';
+import React, { useState, useCallback, useEffect } from "react";
+import "./App.css";
+import CharacterHeader from "./components/CharacterHeader";
+import StatModal from "./components/StatModal";
+import EquipmentModal from "./components/EquipmentModal";
+import UnionMapViewer from "./components/UnionMapViewer";
+import EquipmentTooltip from "./components/EquipmentTooltip";
+import SearchBox from "./components/SearchBox";
+import GuildSearchBox from "./components/GuildSearchBox";
+import GuildInfoModal from "./components/GuildInfoModal";
+import { equipmentCells } from "./constants/equipmentSlots";
+import { useSearchHistory } from "./hooks/useSearchHistory";
+import { useCharacterData } from "./hooks/useCharacterData";
+import { fetchGuildBasic } from "./api/guildApi";
+import { getWorldIcon } from "./utils/worldIcons";
+import { formatStatValue } from "./utils/formatters";
+import { getRarityColor } from "./utils/gameLogic";
 
 const normalizeSlot = (s) =>
-  (s || '')
-    .replace(/[0-9]/g, '')
-    .replace(/\s+/g, '')
-    .replace(/[()_-]/g, '')
+  (s || "")
+    .replace(/[0-9]/g, "")
+    .replace(/\s+/g, "")
+    .replace(/[()_-]/g, "")
     .trim();
 
 function App() {
@@ -29,7 +30,11 @@ function App() {
   const [guildError, setGuildError] = useState(false);
   const [guildLoading, setGuildLoading] = useState(false);
   const [isGuildModalOpen, setIsGuildModalOpen] = useState(false);
-  const [lastGuildSearch, setLastGuildSearch] = useState({ guildName: '', worldName: '' });
+  const [lastGuildSearch, setLastGuildSearch] = useState({
+    guildName: "",
+    worldName: "",
+  });
+  const [activeInfoTab, setActiveInfoTab] = useState("장비");
 
   const handleGuildSearch = useCallback(async (guildName, worldName) => {
     setGuildLoading(true);
@@ -92,32 +97,44 @@ function App() {
   } = useCharacterData(addToHistory);
 
   useEffect(() => {
-    const theme = isBlackWhite ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    const theme = isBlackWhite ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
   }, [isBlackWhite]);
 
   const guildName =
     characterInfo?.character_guild_name ??
     characterInfo?.guild_name ??
     characterInfo?.guildName ??
-    '';
-  const worldName = characterInfo?.world_name ?? characterInfo?.worldName ?? '';
+    "";
+  const worldName = characterInfo?.world_name ?? characterInfo?.worldName ?? "";
   const worldIcon = worldName ? getWorldIcon(worldName) : null;
   const majorStats = statInfo?.final_stat
     ? [
-        ...statInfo.final_stat.filter((s) => s.stat_name === '전투력'),
-        ...statInfo.final_stat.filter((s) => s.stat_name !== '전투력'),
+        ...statInfo.final_stat.filter((s) => s.stat_name === "전투력"),
+        ...statInfo.final_stat.filter((s) => s.stat_name !== "전투력"),
       ].slice(0, 4)
     : null;
 
   return (
     <div className="App">
-      <button type="button" className="app-theme-toggle" onClick={toggleBlackWhite} aria-label="테마 전환">
-        <span className="app-theme-icon">{isBlackWhite ? '☀️' : '🌙'}</span>
-        <span className="app-theme-text">{isBlackWhite ? '라이트 모드' : '다크 모드'}</span>
+      <button
+        type="button"
+        className="app-theme-toggle"
+        onClick={toggleBlackWhite}
+        aria-label="테마 전환"
+      >
+        <span className="app-theme-icon">{isBlackWhite ? "☀️" : "🌙"}</span>
+        <span className="app-theme-text">
+          {isBlackWhite ? "라이트 모드" : "다크 모드"}
+        </span>
       </button>
-      <button type="button" className="app-home-btn" onClick={goHome} title="홈">
+      <button
+        type="button"
+        className="app-home-btn"
+        onClick={goHome}
+        title="홈"
+      >
         🏠
       </button>
       <div className="dashboard">
@@ -146,7 +163,7 @@ function App() {
                   {characterInfo?.character_image ? (
                     <img
                       src={characterInfo.character_image}
-                      alt={characterInfo.character_name || '캐릭터 아이콘'}
+                      alt={characterInfo.character_name || "캐릭터 아이콘"}
                     />
                   ) : (
                     <div className="dashboard-placeholder">캐릭터 아이콘</div>
@@ -156,17 +173,27 @@ function App() {
                   {characterInfo ? (
                     <div className="dashboard-placeholder">
                       <div className="dashboard-characterMeta__row">
-                        <span className="dashboard-characterName">{characterInfo.character_name}</span>
-                        <span className="dashboard-characterLevel">LV.{characterInfo.character_level}</span>
+                        <span className="dashboard-characterName">
+                          {characterInfo.character_name}
+                        </span>
+                        <span className="dashboard-characterLevel">
+                          LV.{characterInfo.character_level}
+                        </span>
                       </div>
                       {worldName && (
                         <div className="dashboard-characterMeta__row">
                           {worldIcon && (
-                            <img className="dashboard-worldIcon" src={worldIcon} alt={worldName} />
+                            <img
+                              className="dashboard-worldIcon"
+                              src={worldIcon}
+                              alt={worldName}
+                            />
                           )}
                           <span>{worldName}</span>
                           {characterInfo?.character_class ? (
-                            <span className="dashboard-characterClass">{characterInfo.character_class}</span>
+                            <span className="dashboard-characterClass">
+                              {characterInfo.character_class}
+                            </span>
                           ) : null}
                         </div>
                       )}
@@ -187,7 +214,10 @@ function App() {
                   {majorStats ? (
                     <ul className="dashboard-majorStats__list">
                       {majorStats.map((stat) => (
-                        <li key={stat.stat_name} className="dashboard-majorStats__item">
+                        <li
+                          key={stat.stat_name}
+                          className="dashboard-majorStats__item"
+                        >
                           <span className="label">{stat.stat_name}</span>
                           <span className="value">
                             {formatStatValue(stat.stat_name, stat.stat_value)}
@@ -196,7 +226,7 @@ function App() {
                       ))}
                     </ul>
                   ) : (
-                    '캐릭터 전투력, 스탯 공격력 등 주요 스탯'
+                    "캐릭터 전투력, 스탯 공격력 등 주요 스탯"
                   )}
                 </div>
                 <div className="dashboard-symbols">
@@ -212,10 +242,28 @@ function App() {
           </section>
 
           <section className="dashboard-mainBottom dashboard-panel dashboard-panel--fill">
-            <div className="dashboard-panel__title">정보창 (장비, 유니온, 기타스탯 등등)</div>
+            <div className="dashboard-panel__title">
+              정보창 (장비, 유니온, 기타스탯 등등)
+            </div>
+            <div className="info-tab-bar">
+              {["장비", "유니온", "기타스탯", "스킬"].map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  className={`info-tab-bar__btn${activeInfoTab === tab ? " info-tab-bar__btn--active" : ""}`}
+                  onClick={() => setActiveInfoTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+
             <div className="dashboard-panel__body dashboard-scroll">
               {!characterInfo && (
-                <GuildSearchBox onSearch={handleGuildSearch} loading={guildLoading} />
+                <GuildSearchBox
+                  onSearch={handleGuildSearch}
+                  loading={guildLoading}
+                />
               )}
 
               {error && <div className="error">{error}</div>}
@@ -230,9 +278,13 @@ function App() {
                     onOpenGuild={handleGuildSearch}
                   />
 
+                  {activeInfoTab === "장비" && (
                   <section className="dashboard-inlineSection">
-                    <h2 className="dashboard-inlineSection__title">장비 정보</h2>
-                    {equipmentInfo?.item_equipment && equipmentInfo.item_equipment.length > 0 ? (
+                    <h2 className="dashboard-inlineSection__title">
+                      장비 정보
+                    </h2>
+                    {equipmentInfo?.item_equipment &&
+                    equipmentInfo.item_equipment.length > 0 ? (
                       <div className="equipment-grid">
                         {(equipmentCells ?? []).map((cell, idx) => {
                           const style = {
@@ -240,9 +292,13 @@ function App() {
                             gridColumn: `${cell.col} / span ${cell.colSpan || 1}`,
                           };
 
-                          if (cell.type === 'preview') {
+                          if (cell.type === "preview") {
                             return (
-                              <div key={idx} className="equipment-cell preview" style={style}>
+                              <div
+                                key={idx}
+                                className="equipment-cell preview"
+                                style={style}
+                              >
                                 {characterInfo?.character_image ? (
                                   <img
                                     src={characterInfo.character_image}
@@ -253,39 +309,65 @@ function App() {
                               </div>
                             );
                           }
-                          if (cell.type === 'mergedEmpty') {
-                            return <div key={idx} className="equipment-cell bottom-merged" style={style} />;
+                          if (cell.type === "mergedEmpty") {
+                            return (
+                              <div
+                                key={idx}
+                                className="equipment-cell bottom-merged"
+                                style={style}
+                              />
+                            );
                           }
-                          if (cell.type === 'empty') {
-                            return <div key={idx} className="equipment-item empty" style={style} />;
+                          if (cell.type === "empty") {
+                            return (
+                              <div
+                                key={idx}
+                                className="equipment-item empty"
+                                style={style}
+                              />
+                            );
                           }
 
                           const itemList = equipmentInfo.item_equipment ?? [];
                           const target = normalizeSlot(cell.slot);
                           const matchingEquipments = itemList
-                            .filter((item) => normalizeSlot(item.item_equipment_slot) === target)
+                            .filter(
+                              (item) =>
+                                normalizeSlot(item.item_equipment_slot) ===
+                                target,
+                            )
                             .sort((a, b) =>
-                              (a.item_equipment_slot || '').localeCompare(
-                                b.item_equipment_slot || '',
-                                'ko'
-                              )
+                              (a.item_equipment_slot || "").localeCompare(
+                                b.item_equipment_slot || "",
+                                "ko",
+                              ),
                             );
 
                           let equip = null;
-                          if (cell.slotIndex && matchingEquipments.length >= cell.slotIndex) {
+                          if (
+                            cell.slotIndex &&
+                            matchingEquipments.length >= cell.slotIndex
+                          ) {
                             equip = matchingEquipments[cell.slotIndex - 1];
                           } else {
                             equip = matchingEquipments[0] || null;
                           }
 
-                          if (!equip && cell.slot === '안드로이드' && androidInfo && typeof androidInfo === 'object') {
-                            const icon = androidInfo.android_icon ?? androidInfo.androidIcon;
+                          if (
+                            !equip &&
+                            cell.slot === "안드로이드" &&
+                            androidInfo &&
+                            typeof androidInfo === "object"
+                          ) {
+                            const icon =
+                              androidInfo.android_icon ??
+                              androidInfo.androidIcon;
                             const name =
                               androidInfo.android_name ??
                               androidInfo.androidName ??
                               androidInfo.android_nickname ??
                               androidInfo.androidNickname ??
-                              '안드로이드';
+                              "안드로이드";
                             if (icon || name) {
                               equip = {
                                 item_icon: icon || null,
@@ -294,11 +376,74 @@ function App() {
                             }
                           }
 
+                          const rarityColor = equip
+                            ? getRarityColor(equip.potential_option_grade)
+                            : null;
                           return (
                             <div
                               key={idx}
-                              className={`equipment-item ${!equip ? 'empty' : ''}`}
-                              style={style}
+                              className={`equipment-item ${!equip ? "empty" : ""}`}
+                              style={{
+                                ...style,
+                                ...(rarityColor
+                                  ? { "--hover-color": rarityColor }
+                                  : {}),
+                              }}
+                              onMouseEnter={(e) => {
+                                if (equip && !activeTooltip.pinned) {
+                                  setActiveTooltip({
+                                    equipment: equip,
+                                    pinned: false,
+                                    position: {
+                                      x: e.clientX + 15,
+                                      y: e.clientY + 15,
+                                    },
+                                  });
+                                }
+                              }}
+                              onMouseMove={(e) => {
+                                if (equip && !activeTooltip.pinned) {
+                                  setActiveTooltip((prev) => ({
+                                    ...prev,
+                                    position: {
+                                      x: e.clientX + 15,
+                                      y: e.clientY + 15,
+                                    },
+                                  }));
+                                }
+                              }}
+                              onMouseLeave={() => {
+                                if (!activeTooltip.pinned) {
+                                  setActiveTooltip({
+                                    equipment: null,
+                                    pinned: false,
+                                    position: null,
+                                  });
+                                }
+                              }}
+                              onClick={(e) => {
+                                if (equip) {
+                                  if (
+                                    activeTooltip.pinned &&
+                                    activeTooltip.equipment === equip
+                                  ) {
+                                    setActiveTooltip({
+                                      equipment: null,
+                                      pinned: false,
+                                      position: null,
+                                    });
+                                  } else {
+                                    setActiveTooltip({
+                                      equipment: equip,
+                                      pinned: true,
+                                      position: {
+                                        x: e.clientX + 15,
+                                        y: e.clientY + 15,
+                                      },
+                                    });
+                                  }
+                                }
+                              }}
                             >
                               {equip ? (
                                 <>
@@ -338,9 +483,16 @@ function App() {
                       </div>
                     )}
                   </section>
+                  )}
 
-                  <section className="dashboard-inlineSection" id="union-section">
-                    <h2 className="dashboard-inlineSection__title">유니온 정보</h2>
+                  {activeInfoTab === "유니온" && (
+                  <section
+                    className="dashboard-inlineSection"
+                    id="union-section"
+                  >
+                    <h2 className="dashboard-inlineSection__title">
+                      유니온 정보
+                    </h2>
                     <div className="dashboard-unionInline">
                       <UnionMapViewer
                         characterName={characterInfo.character_name}
@@ -349,6 +501,25 @@ function App() {
                       />
                     </div>
                   </section>
+                  )}
+
+                  {activeInfoTab === "기타스탯" && (
+                  <section className="dashboard-inlineSection">
+                    <h2 className="dashboard-inlineSection__title">기타스탯</h2>
+                    <div className="dashboard-inlinePlaceholder">
+                      기타스탯 정보 준비 중
+                    </div>
+                  </section>
+                  )}
+
+                  {activeInfoTab === "스킬" && (
+                  <section className="dashboard-inlineSection">
+                    <h2 className="dashboard-inlineSection__title">스킬</h2>
+                    <div className="dashboard-inlinePlaceholder">
+                      스킬 정보 준비 중
+                    </div>
+                  </section>
+                  )}
                 </>
               )}
             </div>
@@ -358,7 +529,7 @@ function App() {
         <aside className="dashboard-sidebar dashboard-sidebar--right">
           <div className="dashboard-panel dashboard-panel--fill">
             <div className="dashboard-panel__title">
-              {guildName ? '길드 채팅' : '길드 없다면 알림'}
+              {guildName ? "길드 채팅" : "길드 없다면 알림"}
             </div>
             <div className="dashboard-panel__body dashboard-scroll">
               <div className="dashboard-placeholder">
