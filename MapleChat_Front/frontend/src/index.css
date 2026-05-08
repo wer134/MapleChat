@@ -33,6 +33,8 @@
   --app-history-text: #333;
   --app-history-hover: #f0f0f0;
   --app-history-divider: #eee;
+  --maple-red: #e23a3a;
+  --text-sub: #7c848d;
 }
 
 [data-theme="dark"] {
@@ -63,6 +65,8 @@
   --app-history-text: #e9ecef;
   --app-history-hover: #343a40;
   --app-history-divider: #495057;
+  --maple-red: #ff6b6b;
+  --text-sub: #9da7b2;
 }
 
 html {

@@ -9,6 +9,8 @@ import EquipmentTooltip from "./components/EquipmentTooltip";
 import SearchBox from "./components/SearchBox";
 import GuildSearchBox from "./components/GuildSearchBox";
 import GuildInfoModal from "./components/GuildInfoModal";
+import CompareView from "./components/CompareView";
+import ChatPanel from "./components/ChatPanel";
 import { equipmentCells } from "./constants/equipmentSlots";
 import { useSearchHistory } from "./hooks/useSearchHistory";
 import { useCharacterData } from "./hooks/useCharacterData";
@@ -35,6 +37,7 @@ function App() {
     worldName: "",
   });
   const [activeInfoTab, setActiveInfoTab] = useState("장비");
+  const [isCompareMode, setIsCompareMode] = useState(false);
 
   const handleGuildSearch = useCallback(async (guildName, worldName) => {
     setGuildLoading(true);
@@ -72,7 +75,6 @@ function App() {
     setIsStatModalOpen,
     isEquipmentModalOpen,
     setIsEquipmentModalOpen,
-    isUnionViewerOpen,
     setIsUnionViewerOpen,
     equipmentInfo,
     equipmentError,
@@ -102,11 +104,6 @@ function App() {
     localStorage.setItem("theme", theme);
   }, [isBlackWhite]);
 
-  const guildName =
-    characterInfo?.character_guild_name ??
-    characterInfo?.guild_name ??
-    characterInfo?.guildName ??
-    "";
   const worldName = characterInfo?.world_name ?? characterInfo?.worldName ?? "";
   const worldIcon = worldName ? getWorldIcon(worldName) : null;
   const majorStats = statInfo?.final_stat
@@ -137,7 +134,17 @@ function App() {
       >
         🏠
       </button>
-      <div className="dashboard">
+      <button
+        type="button"
+        className="app-compare-toggle"
+        onClick={() => setIsCompareMode((prev) => !prev)}
+      >
+        {isCompareMode ? "대시보드로 돌아가기" : "캐릭터 비교"}
+      </button>
+      {isCompareMode ? (
+        <CompareView />
+      ) : (
+        <div className="dashboard">
         <aside className="dashboard-sidebar dashboard-sidebar--left">
           <div className="dashboard-panel dashboard-panel--fill">
             <div className="dashboard-panel__title">로그인</div>
@@ -533,18 +540,20 @@ function App() {
         <aside className="dashboard-sidebar dashboard-sidebar--right">
           <div className="dashboard-panel dashboard-panel--fill">
             <div className="dashboard-panel__title">
-              {guildName ? "길드 채팅" : "길드 없다면 알림"}
+              실시간 채팅
             </div>
             <div className="dashboard-panel__body dashboard-scroll">
-              <div className="dashboard-placeholder">
-                길드 채팅 or 길드 없다면 알림
-              </div>
+              <ChatPanel
+                characterName={characterInfo?.character_name || ""}
+                characterImage={characterInfo?.character_image || ""}
+              />
             </div>
           </div>
         </aside>
-      </div>
+        </div>
+      )}
 
-      <StatModal
+      {!isCompareMode && <StatModal
         isOpen={isStatModalOpen}
         onClose={() => setIsStatModalOpen(false)}
         statInfo={statInfo}
@@ -559,9 +568,9 @@ function App() {
         propensityInfo={propensityInfo}
         propensityError={propensityError}
         retryPropensity={retryPropensity}
-      />
+      />}
 
-      <EquipmentModal
+      {!isCompareMode && <EquipmentModal
         isOpen={isEquipmentModalOpen}
         onClose={() => setIsEquipmentModalOpen(false)}
         equipmentInfo={equipmentInfo}
@@ -571,9 +580,9 @@ function App() {
         characterImage={characterInfo?.character_image}
         activeTooltip={activeTooltip}
         setActiveTooltip={setActiveTooltip}
-      />
+      />}
 
-      {activeTooltip.equipment && (
+      {!isCompareMode && activeTooltip.equipment && (
         <EquipmentTooltip
           equipment={activeTooltip.equipment}
           position={activeTooltip.position}
@@ -585,13 +594,13 @@ function App() {
         />
       )}
 
-      <GuildInfoModal
+      {!isCompareMode && <GuildInfoModal
         isOpen={isGuildModalOpen}
         onClose={() => setIsGuildModalOpen(false)}
         guildInfo={guildInfo}
         guildError={guildError}
         onRetry={handleGuildRetry}
-      />
+      />}
     </div>
   );
 }
