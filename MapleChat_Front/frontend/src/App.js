@@ -279,246 +279,250 @@ function App() {
                   />
 
                   {activeInfoTab === "장비" && (
-                  <section className="dashboard-inlineSection">
-                    <h2 className="dashboard-inlineSection__title">
-                      장비 정보
-                    </h2>
-                    {equipmentInfo?.item_equipment &&
-                    equipmentInfo.item_equipment.length > 0 ? (
-                      <div className="equipment-grid">
-                        {(equipmentCells ?? []).map((cell, idx) => {
-                          const style = {
-                            gridRow: `${cell.row} / span ${cell.rowSpan || 1}`,
-                            gridColumn: `${cell.col} / span ${cell.colSpan || 1}`,
-                          };
+                    <section className="dashboard-inlineSection">
+                      <h2 className="dashboard-inlineSection__title">
+                        장비 정보
+                      </h2>
+                      {equipmentInfo?.item_equipment &&
+                      equipmentInfo.item_equipment.length > 0 ? (
+                        <div className="equipment-grid">
+                          {(equipmentCells ?? []).map((cell, idx) => {
+                            const style = {
+                              gridRow: `${cell.row} / span ${cell.rowSpan || 1}`,
+                              gridColumn: `${cell.col} / span ${cell.colSpan || 1}`,
+                            };
 
-                          if (cell.type === "preview") {
-                            return (
-                              <div
-                                key={idx}
-                                className="equipment-cell preview"
-                                style={style}
-                              >
-                                {characterInfo?.character_image ? (
-                                  <img
-                                    src={characterInfo.character_image}
-                                    alt="캐릭터"
-                                    className="equipment-preview-character"
-                                  />
-                                ) : null}
-                              </div>
-                            );
-                          }
-                          if (cell.type === "mergedEmpty") {
-                            return (
-                              <div
-                                key={idx}
-                                className="equipment-cell bottom-merged"
-                                style={style}
-                              />
-                            );
-                          }
-                          if (cell.type === "empty") {
-                            return (
-                              <div
-                                key={idx}
-                                className="equipment-item empty"
-                                style={style}
-                              />
-                            );
-                          }
-
-                          const itemList = equipmentInfo.item_equipment ?? [];
-                          const target = normalizeSlot(cell.slot);
-                          const matchingEquipments = itemList
-                            .filter(
-                              (item) =>
-                                normalizeSlot(item.item_equipment_slot) ===
-                                target,
-                            )
-                            .sort((a, b) =>
-                              (a.item_equipment_slot || "").localeCompare(
-                                b.item_equipment_slot || "",
-                                "ko",
-                              ),
-                            );
-
-                          let equip = null;
-                          if (
-                            cell.slotIndex &&
-                            matchingEquipments.length >= cell.slotIndex
-                          ) {
-                            equip = matchingEquipments[cell.slotIndex - 1];
-                          } else {
-                            equip = matchingEquipments[0] || null;
-                          }
-
-                          if (
-                            !equip &&
-                            cell.slot === "안드로이드" &&
-                            androidInfo &&
-                            typeof androidInfo === "object"
-                          ) {
-                            const icon =
-                              androidInfo.android_icon ??
-                              androidInfo.androidIcon;
-                            const name =
-                              androidInfo.android_name ??
-                              androidInfo.androidName ??
-                              androidInfo.android_nickname ??
-                              androidInfo.androidNickname ??
-                              "안드로이드";
-                            if (icon || name) {
-                              equip = {
-                                item_icon: icon || null,
-                                item_name: name,
-                              };
+                            if (cell.type === "preview") {
+                              return (
+                                <div
+                                  key={idx}
+                                  className="equipment-cell preview"
+                                  style={style}
+                                >
+                                  {characterInfo?.character_image ? (
+                                    <img
+                                      src={characterInfo.character_image}
+                                      alt="캐릭터"
+                                      className="equipment-preview-character"
+                                    />
+                                  ) : null}
+                                </div>
+                              );
                             }
-                          }
+                            if (cell.type === "mergedEmpty") {
+                              return (
+                                <div
+                                  key={idx}
+                                  className="equipment-cell bottom-merged"
+                                  style={style}
+                                />
+                              );
+                            }
+                            if (cell.type === "empty") {
+                              return (
+                                <div
+                                  key={idx}
+                                  className="equipment-item empty"
+                                  style={style}
+                                />
+                              );
+                            }
 
-                          const rarityColor = equip
-                            ? getRarityColor(equip.potential_option_grade)
-                            : null;
-                          return (
-                            <div
-                              key={idx}
-                              className={`equipment-item ${!equip ? "empty" : ""}`}
-                              style={{
-                                ...style,
-                                ...(rarityColor
-                                  ? { "--hover-color": rarityColor }
-                                  : {}),
-                              }}
-                              onMouseEnter={(e) => {
-                                if (equip && !activeTooltip.pinned) {
-                                  setActiveTooltip({
-                                    equipment: equip,
-                                    pinned: false,
-                                    position: {
-                                      x: e.clientX + 15,
-                                      y: e.clientY + 15,
-                                    },
-                                  });
-                                }
-                              }}
-                              onMouseMove={(e) => {
-                                if (equip && !activeTooltip.pinned) {
-                                  setActiveTooltip((prev) => ({
-                                    ...prev,
-                                    position: {
-                                      x: e.clientX + 15,
-                                      y: e.clientY + 15,
-                                    },
-                                  }));
-                                }
-                              }}
-                              onMouseLeave={() => {
-                                if (!activeTooltip.pinned) {
-                                  setActiveTooltip({
-                                    equipment: null,
-                                    pinned: false,
-                                    position: null,
-                                  });
-                                }
-                              }}
-                              onClick={(e) => {
-                                if (equip) {
-                                  if (
-                                    activeTooltip.pinned &&
-                                    activeTooltip.equipment === equip
-                                  ) {
-                                    setActiveTooltip({
-                                      equipment: null,
-                                      pinned: false,
-                                      position: null,
-                                    });
-                                  } else {
+                            const itemList = equipmentInfo.item_equipment ?? [];
+                            const target = normalizeSlot(cell.slot);
+                            const matchingEquipments = itemList
+                              .filter(
+                                (item) =>
+                                  normalizeSlot(item.item_equipment_slot) ===
+                                  target,
+                              )
+                              .sort((a, b) =>
+                                (a.item_equipment_slot || "").localeCompare(
+                                  b.item_equipment_slot || "",
+                                  "ko",
+                                ),
+                              );
+
+                            let equip = null;
+                            if (
+                              cell.slotIndex &&
+                              matchingEquipments.length >= cell.slotIndex
+                            ) {
+                              equip = matchingEquipments[cell.slotIndex - 1];
+                            } else {
+                              equip = matchingEquipments[0] || null;
+                            }
+
+                            if (
+                              !equip &&
+                              cell.slot === "안드로이드" &&
+                              androidInfo &&
+                              typeof androidInfo === "object"
+                            ) {
+                              const icon =
+                                androidInfo.android_icon ??
+                                androidInfo.androidIcon;
+                              const name =
+                                androidInfo.android_name ??
+                                androidInfo.androidName ??
+                                androidInfo.android_nickname ??
+                                androidInfo.androidNickname ??
+                                "안드로이드";
+                              if (icon || name) {
+                                equip = {
+                                  item_icon: icon || null,
+                                  item_name: name,
+                                };
+                              }
+                            }
+
+                            const rarityColor = equip
+                              ? getRarityColor(equip.potential_option_grade)
+                              : null;
+                            return (
+                              <div
+                                key={idx}
+                                className={`equipment-item ${!equip ? "empty" : ""}`}
+                                style={{
+                                  ...style,
+                                  ...(rarityColor
+                                    ? { "--hover-color": rarityColor }
+                                    : {}),
+                                }}
+                                onMouseEnter={(e) => {
+                                  if (equip && !activeTooltip.pinned) {
                                     setActiveTooltip({
                                       equipment: equip,
-                                      pinned: true,
+                                      pinned: false,
                                       position: {
                                         x: e.clientX + 15,
                                         y: e.clientY + 15,
                                       },
                                     });
                                   }
-                                }
-                              }}
-                            >
-                              {equip ? (
-                                <>
-                                  {equip.item_icon ? (
-                                    <img
-                                      src={equip.item_icon}
-                                      alt={equip.item_name || cell.label}
-                                    />
-                                  ) : (
-                                    <span className="equipment-slot-fallback">
-                                      {equip.item_name || cell.label}
-                                    </span>
-                                  )}
-                                </>
-                              ) : (
-                                <span className="slot-label">{cell.label}</span>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    ) : equipmentError ? (
-                      <div className="dashboard-inlineError">
-                        장비 정보를 불러올 수 없습니다.
-                        <button
-                          type="button"
-                          onClick={retryEquipment}
-                          className="retry-btn"
-                          title="재시도"
-                        >
-                          ↻
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="dashboard-inlinePlaceholder">
-                        장비 정보를 불러오는 중이거나 없습니다.
-                      </div>
-                    )}
-                  </section>
+                                }}
+                                onMouseMove={(e) => {
+                                  if (equip && !activeTooltip.pinned) {
+                                    setActiveTooltip((prev) => ({
+                                      ...prev,
+                                      position: {
+                                        x: e.clientX + 15,
+                                        y: e.clientY + 15,
+                                      },
+                                    }));
+                                  }
+                                }}
+                                onMouseLeave={() => {
+                                  if (!activeTooltip.pinned) {
+                                    setActiveTooltip({
+                                      equipment: null,
+                                      pinned: false,
+                                      position: null,
+                                    });
+                                  }
+                                }}
+                                onClick={(e) => {
+                                  if (equip) {
+                                    if (
+                                      activeTooltip.pinned &&
+                                      activeTooltip.equipment === equip
+                                    ) {
+                                      setActiveTooltip({
+                                        equipment: null,
+                                        pinned: false,
+                                        position: null,
+                                      });
+                                    } else {
+                                      setActiveTooltip({
+                                        equipment: equip,
+                                        pinned: true,
+                                        position: {
+                                          x: e.clientX + 15,
+                                          y: e.clientY + 15,
+                                        },
+                                      });
+                                    }
+                                  }
+                                }}
+                              >
+                                {equip ? (
+                                  <>
+                                    {equip.item_icon ? (
+                                      <img
+                                        src={equip.item_icon}
+                                        alt={equip.item_name || cell.label}
+                                      />
+                                    ) : (
+                                      <span className="equipment-slot-fallback">
+                                        {equip.item_name || cell.label}
+                                      </span>
+                                    )}
+                                  </>
+                                ) : (
+                                  <span className="slot-label">
+                                    {cell.label}
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : equipmentError ? (
+                        <div className="dashboard-inlineError">
+                          장비 정보를 불러올 수 없습니다.
+                          <button
+                            type="button"
+                            onClick={retryEquipment}
+                            className="retry-btn"
+                            title="재시도"
+                          >
+                            ↻
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="dashboard-inlinePlaceholder">
+                          장비 정보를 불러오는 중이거나 없습니다.
+                        </div>
+                      )}
+                    </section>
                   )}
 
                   {activeInfoTab === "유니온" && (
-                  <section
-                    className="dashboard-inlineSection"
-                    id="union-section"
-                  >
-                    <h2 className="dashboard-inlineSection__title">
-                      유니온 정보
-                    </h2>
-                    <div className="dashboard-unionInline">
-                      <UnionMapViewer
-                        characterName={characterInfo.character_name}
-                        darkMode={isBlackWhite}
-                        inline
-                      />
-                    </div>
-                  </section>
+                    <section
+                      className="dashboard-inlineSection"
+                      id="union-section"
+                    >
+                      <h2 className="dashboard-inlineSection__title">
+                        유니온 정보
+                      </h2>
+                      <div className="dashboard-unionInline">
+                        <UnionMapViewer
+                          characterName={characterInfo.character_name}
+                          darkMode={isBlackWhite}
+                          inline
+                        />
+                      </div>
+                    </section>
                   )}
 
                   {activeInfoTab === "기타스탯" && (
-                  <section className="dashboard-inlineSection">
-                    <h2 className="dashboard-inlineSection__title">기타스탯</h2>
-                    <div className="dashboard-inlinePlaceholder">
-                      기타스탯 정보 준비 중
-                    </div>
-                  </section>
+                    <section className="dashboard-inlineSection">
+                      <h2 className="dashboard-inlineSection__title">
+                        기타스탯
+                      </h2>
+                      <div className="dashboard-inlinePlaceholder">
+                        기타스탯 정보 준비 중
+                      </div>
+                    </section>
                   )}
 
                   {activeInfoTab === "스킬" && (
-                  <section className="dashboard-inlineSection">
-                    <h2 className="dashboard-inlineSection__title">스킬</h2>
-                    <div className="dashboard-inlinePlaceholder">
-                      스킬 정보 준비 중
-                    </div>
-                  </section>
+                    <section className="dashboard-inlineSection">
+                      <h2 className="dashboard-inlineSection__title">스킬</h2>
+                      <div className="dashboard-inlinePlaceholder">
+                        스킬 정보 준비 중
+                      </div>
+                    </section>
                   )}
                 </>
               )}
