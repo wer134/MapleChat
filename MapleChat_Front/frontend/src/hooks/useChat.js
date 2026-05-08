@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import SockJS from 'sockjs-client';
 import { Stomp } from 'stompjs/lib/stomp';
+import { getApiBase } from '../api/apiBase';
 
 export function useChat(characterName, characterImage) {
   const [messages, setMessages] = useState([]);
@@ -13,7 +14,9 @@ export function useChat(characterName, characterImage) {
       return;
     }
 
-    const socket = new SockJS('/ws');
+    const apiBase = getApiBase();
+    const sockJsUrl = apiBase ? `${apiBase}/ws` : '/ws';
+    const socket = new SockJS(sockJsUrl);
     const client = Stomp.over(socket);
     client.debug = () => {};
 
