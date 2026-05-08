@@ -147,7 +147,7 @@ const normalizeSlot = (s) =>
 ```bash
 cd MapleChat_Back
 # application.properties 또는 환경변수에 API 키 설정
-# nexon.api-key=YOUR_API_KEY
+# NEXON_API_KEY=YOUR_API_KEY
 ./mvnw spring-boot:run
 ```
 
@@ -170,6 +170,25 @@ npm run electron:start
 ```bash
 npm run electron:build
 # dist/ 폴더에 .exe 인스톨러 생성
+```
+
+---
+
+## Railway 백엔드 배포
+
+`MapleChat_Back` 폴더 기준으로 Railway 서비스 생성 후, 아래 환경변수를 등록하면 바로 실행됩니다.
+
+- `NEXON_API_KEY` : 넥슨 Open API 키 (필수)
+- `CORS_ALLOWED_ORIGINS` : 프론트엔드 도메인 (예: `https://maplechat-frontend.vercel.app`)
+- `PORT` : Railway가 자동 주입 (직접 설정 불필요)
+
+프로젝트에 포함된 `MapleChat_Back/railway.toml`이 실행 명령을 자동으로 사용합니다.
+
+```bash
+# 로컬에서 배포 전 확인
+cd MapleChat_Back
+./mvnw clean package
+java -Dserver.port=8080 -jar target/MapleChat-0.0.1-SNAPSHOT.jar
 ```
 
 ---
