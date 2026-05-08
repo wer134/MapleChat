@@ -89,8 +89,6 @@ function App() {
     hyperStatError,
     handleSearch,
     goHome,
-    isBlackWhite,
-    toggleBlackWhite,
     retryStat,
     retryHyperStat,
     retryAbility,
@@ -99,10 +97,9 @@ function App() {
   } = useCharacterData(addToHistory);
 
   useEffect(() => {
-    const theme = isBlackWhite ? "dark" : "light";
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [isBlackWhite]);
+    document.documentElement.setAttribute("data-theme", "dark");
+    localStorage.setItem("theme", "dark");
+  }, []);
 
   const worldName = characterInfo?.world_name ?? characterInfo?.worldName ?? "";
   const worldIcon = worldName ? getWorldIcon(worldName) : null;
@@ -115,17 +112,6 @@ function App() {
 
   return (
     <div className="App">
-      <button
-        type="button"
-        className="app-theme-toggle"
-        onClick={toggleBlackWhite}
-        aria-label="테마 전환"
-      >
-        <span className="app-theme-icon">{isBlackWhite ? "☀️" : "🌙"}</span>
-        <span className="app-theme-text">
-          {isBlackWhite ? "라이트 모드" : "다크 모드"}
-        </span>
-      </button>
       <button
         type="button"
         className="app-home-btn"
@@ -505,7 +491,7 @@ function App() {
                       <div className="dashboard-unionInline">
                         <UnionMapViewer
                           characterName={characterInfo.character_name}
-                          darkMode={isBlackWhite}
+                          darkMode
                           inline
                         />
                       </div>

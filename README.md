@@ -193,6 +193,23 @@ java -Dserver.port=8080 -jar target/MapleChat-0.0.1-SNAPSHOT.jar
 
 ---
 
+## 프론트엔드 배포 + 백엔드 연동
+
+프론트엔드(`MapleChat_Front/frontend`)는 정적 배포(Vercel/Netlify/Railway Static) 기준으로 `REACT_APP_API_URL`만 설정하면 백엔드와 연동됩니다.
+
+1. 프론트 배포 플랫폼에 `MapleChat_Front/frontend`를 연결합니다.
+2. 환경변수 설정:
+   - `REACT_APP_API_URL=https://<your-railway-backend-domain>`
+3. 프론트 재배포 후 네트워크 요청이 `/character/*`, `/guild/*`, `/union/*`로 정상 호출되는지 확인합니다.
+
+백엔드 Railway Variables도 같이 맞춰야 브라우저 호출이 허용됩니다.
+
+- `CORS_ALLOWED_ORIGINS=https://<your-frontend-domain>`
+- 여러 도메인을 허용할 때는 콤마로 구분  
+  예: `https://maplechat.vercel.app,http://localhost:3000`
+
+---
+
 ## API 엔드포인트
 
 백엔드 실행 후 Swagger UI에서 전체 API 목록을 확인할 수 있습니다.
