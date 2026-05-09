@@ -7,6 +7,11 @@ export function useChat(characterName, characterImage) {
   const [messages, setMessages] = useState([]);
   const [connected, setConnected] = useState(false);
   const stompClientRef = useRef(null);
+  const characterImageRef = useRef(characterImage);
+
+  useEffect(() => {
+    characterImageRef.current = characterImage;
+  }, [characterImage]);
 
   useEffect(() => {
     if (!characterName) {
@@ -41,7 +46,7 @@ export function useChat(characterName, characterImage) {
           JSON.stringify({
             type: 'ENTER',
             sender: characterName,
-            characterImage: characterImage || null,
+            characterImage: characterImageRef.current || null,
           })
         );
       },
@@ -59,7 +64,7 @@ export function useChat(characterName, characterImage) {
           JSON.stringify({
             type: 'LEAVE',
             sender: characterName,
-            characterImage: characterImage || null,
+            characterImage: characterImageRef.current || null,
           })
         );
         activeClient.disconnect(() => {});
@@ -67,7 +72,7 @@ export function useChat(characterName, characterImage) {
       stompClientRef.current = null;
       setConnected(false);
     };
-  }, [characterImage, characterName]);
+  }, [characterName]);
 
   const sendMessage = useCallback(
     (content) => {
@@ -82,11 +87,11 @@ export function useChat(characterName, characterImage) {
           type: 'TALK',
           sender: characterName,
           content: messageContent,
-          characterImage: characterImage || null,
+          characterImage: characterImageRef.current || null,
         })
       );
     },
-    [characterImage, characterName]
+    [characterName]
   );
 
   return { messages, sendMessage, connected };
