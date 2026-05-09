@@ -285,7 +285,7 @@
       <div class="stack-group-title">Backend</div>
       <div class="stack-pills">
         <span class="pill pill-java">☕ Java 17</span>
-        <span class="pill pill-spring">🍃 Spring Boot 3</span>
+        <span class="pill pill-spring">🍃 Spring Boot 4</span>
         <span class="pill pill-spring">⚡ WebClient (Spring WebFlux)</span>
         <span class="pill pill-ws">🔌 STOMP over SockJS</span>
         <span class="pill pill-spring">📖 SpringDoc OpenAPI (Swagger)</span>
@@ -337,7 +337,7 @@
         <div class="arch-box-title">BACKEND</div>
         <div class="arch-host">Railway · maplechat-production.up.railway.app</div>
         <ul>
-          <li>Spring Boot 3 REST API</li>
+          <li>Spring Boot 4 REST API</li>
           <li>STOMP WebSocket 브로커</li>
           <li>WebClient (비동기)</li>
           <li>OCID 인메모리 캐시</li>
@@ -431,7 +431,7 @@
       </div>
 
       <div class="feature-card fc-teal reveal">
-        <div class="feature-icon">⚔️</div>
+        <div class="feature-icon">🏰</div>
         <h3>길드 정보 조회</h3>
         <p>길드명 + 서버명으로 길드 기본 정보 조회. 캐릭터 조회 결과에서 소속 길드를 원클릭으로 바로 연결해 검색하는 흐름 지원.</p>
         <span class="feature-who feature-who-me">MY WORK</span>
@@ -508,6 +508,17 @@
       </div>
     </div>
 
+    <div class="challenge-item reveal">
+      <div class="challenge-num">06</div>
+      <div class="challenge-content">
+        <h3>WebSocket useEffect 의존성 버그 — characterImage ref 패턴</h3>
+        <p><code style="color:var(--maple-yellow);font-family:'Space Mono',monospace;font-size:.82rem;">useChat</code> 훅의 <code style="color:var(--maple-yellow);font-family:'Space Mono',monospace;font-size:.82rem;">useEffect</code> 의존성 배열에 <code style="color:var(--maple-yellow);font-family:'Space Mono',monospace;font-size:.82rem;">characterImage</code>가 포함되어 있었습니다. 캐릭터 이미지 URL이 변경될 때마다 WebSocket 연결이 끊겼다 재연결되며 다른 사용자에게 불필요한 입장·퇴장 알림이 반복되는 문제가 발생했습니다. <strong style="color:var(--text);">characterImageRef</strong>를 별도 <code style="color:var(--maple-yellow);font-family:'Space Mono',monospace;font-size:.82rem;">useRef</code>로 분리해 최신값을 추적하도록 바꾸고, <code style="color:var(--maple-yellow);font-family:'Space Mono',monospace;font-size:.82rem;">useEffect</code>와 <code style="color:var(--maple-yellow);font-family:'Space Mono',monospace;font-size:.82rem;">useCallback</code>의 의존성에서 제거해 <strong style="color:var(--text);">characterName이 바뀔 때만 재연결</strong>되도록 수정했습니다.</p>
+        <span class="challenge-badge">useEffect 의존성</span>
+        <span class="challenge-badge">useRef 패턴</span>
+        <span class="challenge-badge">stale closure 방지</span>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -531,7 +542,7 @@
       <div class="learning-card reveal">
         <div class="emoji">🔌</div>
         <h4>WebSocket 실시간 통신</h4>
-        <p>STOMP over SockJS로 Spring Boot WebSocket 서버와 React 클라이언트를 연결하는 과정에서 실시간 통신 프로토콜과 구독/발행 패턴을 직접 구현했습니다.</p>
+        <p>STOMP over SockJS로 Spring Boot WebSocket 서버와 React 클라이언트를 연결하는 과정에서 실시간 통신 프로토콜과 구독/발행 패턴을 직접 구현했습니다. useEffect 의존성으로 인한 불필요한 재연결 문제를 useRef 패턴으로 해결하며 React 훅의 동작 원리를 깊이 이해했습니다.</p>
       </div>
       <div class="learning-card reveal">
         <div class="emoji">☁️</div>
